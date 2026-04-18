@@ -1,0 +1,102 @@
+<main class="cadastro-page">
+  <section class="cadastro-card">
+    <h1>Criar conta</h1>
+    <p class="description">Preencha os dados abaixo para se cadastrar</p>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="input-group">
+        <label>Nome</label>
+        <input type="text" formControlName="nome" placeholder="Digite seu nome" />
+      </div>
+
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="seu@email.com" />
+      </div>
+
+      <div class="input-group">
+        <label>Telefone</label>
+        <input type="text" formControlName="telefone" placeholder="(21) 99999-9999" />
+      </div>
+
+      <div class="input-group">
+        <label>Senha</label>
+        <input
+          type="password"
+          formControlName="senha"
+          placeholder="Crie sua senha"
+          (input)="validarSenha($any(form.get('senha')?.value || '')); verificarSenhas()"
+        />
+      </div>
+
+      <div class="input-group">
+        <label>Confirmar senha</label>
+        <input
+          type="password"
+          formControlName="confirmarSenha"
+          placeholder="Confirme sua senha"
+          (input)="verificarSenhas()"
+        />
+      </div>
+
+      @if (senhasDiferentes) {
+        <p class="erro-senha">As senhas não coincidem.</p>
+      }
+
+      <div class="password-rules">
+        <h3>Requisitos da senha</h3>
+
+        <div class="rules-list">
+          <div class="rule-item" [class.ok]="regraMinimocaracteres">
+            <span class="rule-icon">{{ regraMinimocaracteres ? '✓' : '•' }}</span>
+            <span>Mínimo de 8 caracteres</span>
+          </div>
+
+          <div class="rule-item" [class.ok]="regraMaximoCaracteres">
+            <span class="rule-icon">{{ regraMaximoCaracteres ? '✓' : '•' }}</span>
+            <span>Máximo de 16 caracteres</span>
+          </div>
+
+          <div class="rule-item" [class.ok]="regraLetraMaiuscula">
+            <span class="rule-icon">{{ regraLetraMaiuscula ? '✓' : '•' }}</span>
+            <span>Pelo menos 1 letra maiúscula</span>
+          </div>
+
+          <div class="rule-item" [class.ok]="regraCaracterEspecial">
+            <span class="rule-icon">{{ regraCaracterEspecial ? '✓' : '•' }}</span>
+            <span>Pelo menos 1 caractere especial</span>
+          </div>
+
+          <div class="rule-item" [class.ok]="regraNumerosLetras">
+            <span class="rule-icon">{{ regraNumerosLetras ? '✓' : '•' }}</span>
+            <span>Combinação de letras e números</span>
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="login-btn"
+        [ngClass]="{
+          'success': statusCadastro() === 'sucesso',
+          'error': statusCadastro() === 'erro'
+        }"
+        type="submit"
+      >
+        {{
+          statusCadastro() === 'sucesso'
+            ? 'Cadastro realizado!'
+            : statusCadastro() === 'erro'
+            ? 'Verifique os dados'
+            : 'Cadastrar'
+        }}
+      </button>
+    </form>
+
+    <p class="switch-text">
+      Já possui conta?
+      <button type="button" class="text-btn" (click)="irParaLogin()">
+        Entrar
+      </button>
+    </p>
+  </section>
+</main>

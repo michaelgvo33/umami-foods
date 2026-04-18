@@ -1,0 +1,42 @@
+<main class="login-page">
+  <section class="login-card">
+    <h1>Bem-vindo</h1>
+    <p class="description">Entre com sua conta para continuar</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="entrar()">
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="seu@email.com" />
+      </div>
+
+      <div class="input-group">
+        <label>Senha</label>
+        <input type="password" formControlName="senha" placeholder="••••••••" />
+      </div>
+
+      <button
+        class="login-btn"
+        [ngClass]="{
+          'success': statusLogin() === 'sucesso',
+          'error': statusLogin() === 'erro'
+        }"
+        type="submit"
+      >
+        {{
+          statusLogin() === 'sucesso'
+            ? 'Login realizado!'
+            : statusLogin() === 'erro'
+            ? 'Login inválido'
+            : 'Entrar'
+        }}
+      </button>
+    </form>
+
+    <p class="switch-text">
+      Não possui conta?
+      <button type="button" class="text-btn" (click)="irParaCadastro()">
+        Cadastre-se
+      </button>
+    </p>
+  </section>
+</main>
