@@ -1,0 +1,195 @@
+<main class="produtos-page">
+  <header class="header-shell">
+    <div class="navbar">
+      <a routerLink="/home" class="brand">
+        <img src="logo-dark.png" alt="Umami Foods" class="brand-logo" />
+      </a>
+
+      <nav class="nav-links">
+        <a routerLink="/home">Home</a>
+        <a routerLink="/produtos" class="active">Produtos</a>
+        <a routerLink="/contato">Contato</a>
+      </nav>
+
+      <div class="header-actions">
+        <button type="button" class="cart-button" (click)="cartService.abrirCarrinho()">
+          <span class="cart-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M7 18C5.9 18 5.01 18.9 5.01 20S5.9 22 7 22 9 21.1 9 20 8.1 18 7 18ZM17 18C15.9 18 15.01 18.9 15.01 20S15.9 22 17 22 19 21.1 19 20 18.1 18 17 18ZM7.17 14H17.12C17.87 14 18.53 13.59 18.87 12.97L22 7.5V6H6.21L5.27 4H2V6H4L7.6 13.59 6.25 16.04C5.52 17.37 6.48 19 8 19H20V17H8L7.17 14Z"
+              />
+            </svg>
+          </span>
+          <span class="cart-text">Carrinho</span>
+          <span class="cart-count" *ngIf="cartService.quantidadeItens > 0">
+            {{ cartService.quantidadeItens }}
+          </span>
+        </button>
+
+        <a routerLink="/login" class="nav-login">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero-section">
+    <div class="hero-card">
+      <span class="hero-tag">Catalogo Umami Foods</span>
+      <h1>Produtos japoneses para uma operacao profissional</h1>
+      <p>
+        Ingredientes, utensilios, loucas e embalagens com a identidade visual,
+        qualidade e praticidade que combinam com a Umami Foods.
+      </p>
+    </div>
+  </section>
+
+  <section class="breadcrumb-shell">
+    <div class="breadcrumb">
+      <a routerLink="/home">Home</a>
+      <span>/</span>
+      <button type="button" (click)="voltarParaCatalogo()">Produtos</button>
+
+      <ng-container *ngIf="categoriaSelecionada !== 'Todos'">
+        <span>/</span>
+        <button type="button" (click)="voltarParaCatalogo()">{{ categoriaSelecionada }}</button>
+      </ng-container>
+
+      <ng-container *ngIf="produtoSelecionado">
+        <span>/</span>
+        <span class="current">{{ produtoSelecionado.nome }}</span>
+      </ng-container>
+    </div>
+  </section>
+
+  <section class="catalog-shell">
+    <div class="categories-row">
+      <button
+        type="button"
+        class="category-chip"
+        *ngFor="let categoria of categorias"
+        [class.active]="categoriaSelecionada === categoria"
+        (click)="selecionarCategoria(categoria)"
+      >
+        {{ categoria }}
+      </button>
+    </div>
+
+    <section class="catalog-content" *ngIf="!produtoSelecionado; else detalheProduto">
+      <div class="section-header">
+        <h2>{{ categoriaSelecionada === 'Todos' ? 'Todos os produtos' : categoriaSelecionada }}</h2>
+        <p>Escolha os itens e adicione ao carrinho sem sair da pagina.</p>
+      </div>
+
+      <div class="products-grid">
+        <article class="product-card" *ngFor="let produto of produtosFiltrados">
+          <span class="product-badge" *ngIf="produto.destaque">{{ produto.destaque }}</span>
+
+          <button type="button" class="product-image-box" (click)="selecionarProduto(produto)">
+            <img [src]="produto.imagem" [alt]="produto.nome" class="product-image" />
+          </button>
+
+          <div class="product-content">
+            <p class="product-category">{{ produto.categoria }}</p>
+            <h3>{{ produto.nome }}</h3>
+            <p class="product-description">{{ produto.descricao }}</p>
+            <strong class="product-price">{{ formatarPreco(produto.preco) }}</strong>
+          </div>
+
+          <div class="product-actions">
+            <button type="button" class="ghost-btn" (click)="selecionarProduto(produto)">
+              Ver detalhes
+            </button>
+            <button type="button" class="primary-btn" (click)="cartService.adicionarAoCarrinho(produto)">
+              Adicionar ao carrinho
+            </button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <ng-template #detalheProduto>
+      <section class="detail-card" *ngIf="produtoSelecionado">
+        <div class="detail-image-box">
+          <img
+            [src]="produtoSelecionado.imagem"
+            [alt]="produtoSelecionado.nome"
+            class="detail-image"
+          />
+        </div>
+
+        <div class="detail-content">
+          <span class="detail-category">{{ produtoSelecionado.categoria }}</span>
+          <h2>{{ produtoSelecionado.nome }}</h2>
+          <p class="detail-description">{{ produtoSelecionado.descricao }}</p>
+          <strong class="detail-price">{{ formatarPreco(produtoSelecionado.preco) }}</strong>
+
+          <div class="detail-actions">
+            <button type="button" class="ghost-btn" (click)="voltarParaCatalogo()">
+              Voltar para produtos
+            </button>
+            <button
+              type="button"
+              class="primary-btn"
+              (click)="cartService.adicionarAoCarrinho(produtoSelecionado)"
+            >
+              Adicionar ao carrinho
+            </button>
+          </div>
+        </div>
+      </section>
+    </ng-template>
+  </section>
+
+  <div class="cart-overlay" *ngIf="cartService.carrinhoAberto()" (click)="cartService.fecharCarrinho()">
+    <aside class="cart-panel" (click)="$event.stopPropagation()">
+      <div class="cart-header">
+        <div>
+          <h2>Seu carrinho</h2>
+          <p>{{ cartService.quantidadeItens }} item(ns)</p>
+        </div>
+
+        <button type="button" class="close-btn" (click)="cartService.fecharCarrinho()">X</button>
+      </div>
+
+      <div class="empty-cart" *ngIf="cartService.carrinho().length === 0">
+        <h3>Carrinho vazio</h3>
+        <p>Adicione produtos para montar seu pedido.</p>
+      </div>
+
+      <div class="cart-items" *ngIf="cartService.carrinho().length > 0">
+        <article class="cart-item" *ngFor="let item of cartService.carrinho()">
+          <img [src]="item.imagem" [alt]="item.nome" class="cart-item-image" />
+
+          <div class="cart-item-info">
+            <h3>{{ item.nome }}</h3>
+            <p>{{ cartService.formatarPreco(item.preco) }}</p>
+
+            <div class="quantity-controls">
+              <button type="button" (click)="cartService.diminuirQuantidade(item.id)">-</button>
+              <span>{{ item.quantidade }}</span>
+              <button type="button" (click)="cartService.aumentarQuantidade(item.id)">+</button>
+            </div>
+
+            <strong>{{ cartService.formatarPreco(item.preco * item.quantidade) }}</strong>
+          </div>
+
+          <button type="button" class="remove-btn" (click)="cartService.removerItem(item.id)">
+            Remover
+          </button>
+        </article>
+      </div>
+
+      <div class="cart-footer" *ngIf="cartService.carrinho().length > 0">
+        <div class="cart-total">
+          <span>Total</span>
+          <strong>{{ cartService.formatarPreco(cartService.totalCarrinho) }}</strong>
+        </div>
+
+        <button type="button" class="checkout-btn">Finalizar pedido</button>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="footer-text">
+    &copy; 2026 Umami Foods. Todos os direitos reservados.
+  </footer>
+</main>
