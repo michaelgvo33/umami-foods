@@ -1,0 +1,106 @@
+<main class="contato-page">
+  <app-header
+    [navItems]="navItems"
+    currentPage="Contato"
+  ></app-header>
+
+  <section class="hero-section">
+    <div class="hero-card">
+      <span class="hero-tag">{{ hero.tag }}</span>
+      <h1>{{ hero.title }}</h1>
+      <p>{{ hero.description }}</p>
+    </div>
+  </section>
+
+  <section class="content-shell">
+    <div class="contact-grid">
+      <section class="contact-card">
+        <div class="section-header">
+          <h2>Nossos canais</h2>
+          <p>Escolha a melhor forma de falar com nossa equipe.</p>
+        </div>
+
+        <div class="channels-grid">
+          <article class="channel-card" *ngFor="let canal of canais">
+            <h3>{{ canal.titulo }}</h3>
+            <strong>{{ canal.destaque }}</strong>
+            <p>{{ canal.descricao }}</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="contact-card">
+        <div class="section-header">
+          <h2>Envie sua mensagem</h2>
+          <p>Preencha os dados abaixo para falar com a nossa equipe.</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="enviarFormulario()" class="contact-form">
+          <div class="input-group" *ngFor="let campo of camposFormulario">
+            <label>{{ campo.label }}</label>
+
+            <input
+              *ngIf="campo.type === 'text' || campo.type === 'email' || campo.type === 'tel'"
+              [type]="campo.type"
+              [formControlName]="campo.controlName"
+              [placeholder]="campo.placeholder || ''"
+            />
+
+            <select
+              *ngIf="campo.type === 'select'"
+              [formControlName]="campo.controlName"
+            >
+              <option value="">Selecione um assunto</option>
+              <option *ngFor="let assunto of assuntos" [value]="assunto">
+                {{ assunto }}
+              </option>
+            </select>
+
+            <textarea
+              *ngIf="campo.type === 'textarea'"
+              [formControlName]="campo.controlName"
+              [rows]="campo.rows || 4"
+              [placeholder]="campo.placeholder || ''"
+            ></textarea>
+          </div>
+
+          <button
+            class="submit-btn"
+            [ngClass]="{
+              'success': statusEnvio() === 'sucesso',
+              'error': statusEnvio() === 'erro'
+            }"
+            type="submit"
+          >
+            {{
+              statusEnvio() === 'sucesso'
+                ? 'Mensagem enviada!'
+                : statusEnvio() === 'erro'
+                ? 'Verifique os campos'
+                : 'Enviar mensagem'
+            }}
+          </button>
+        </form>
+      </section>
+    </div>
+
+    <section class="faq-card">
+      <div class="section-header">
+        <h2>Perguntas frequentes</h2>
+        <p>Respostas rapidas para as duvidas mais comuns.</p>
+      </div>
+
+      <div class="faq-list">
+        <article class="faq-item" *ngFor="let item of faq">
+          <h3>{{ item.pergunta }}</h3>
+          <p>{{ item.resposta }}</p>
+        </article>
+      </div>
+    </section>
+  </section>
+
+  <app-footer
+    [links]="footerLinks"
+    copyright="© 2026 Umami Foods. Todos os direitos reservados."
+  ></app-footer>
+</main>

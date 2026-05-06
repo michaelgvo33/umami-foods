@@ -1,0 +1,7 @@
+<footer class="footer-text">
+  <div class="footer-links">
+    <a *ngFor="let item of links" [routerLink]="item.route">{{ item.label }}</a>
+  </div>
+
+  <p>{{ copyright }}</p>
+</footer>

@@ -1,0 +1,68 @@
+<main class="home-page">
+  <app-header
+    [navItems]="navItems"
+    currentPage="Home"
+  ></app-header>
+
+  <section class="hero-section">
+    <div class="hero-banner">
+      <span class="hero-tag">{{ hero.tag }}</span>
+
+      <h1>{{ hero.title }}</h1>
+
+      <p class="hero-text">
+        {{ hero.description }}
+      </p>
+
+      <div class="hero-actions">
+        <a
+          *ngFor="let action of heroActions"
+          [routerLink]="action.route"
+          class="hero-action"
+          [class.primary-btn]="action.variant === 'primary'"
+          [class.secondary-btn]="action.variant === 'secondary'"
+        >
+          {{ action.label }}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="offers-section">
+    <div class="section-header">
+      <h2>Promoções Do Dia</h2>
+      <p>Produtos em destaque com condições especiais.</p>
+    </div>
+
+    <div class="offers-grid">
+      <app-product-card
+        *ngFor="let produto of ofertas"
+        [produto]="produto"
+        [precoAntigo]="produto.precoAntigo"
+        buttonLabel="Adicionar ao carrinho"
+        (addToCart)="adicionarAoCarrinho($event)"
+      ></app-product-card>
+    </div>
+  </section>
+
+  <section class="benefits-section">
+    <div class="section-header">
+      <h2>Por Que Escolher A Umami Foods?</h2>
+      <p>Uma operação pensada para atender seu negócio com mais segurança.</p>
+    </div>
+
+    <div class="benefits-grid">
+      <article class="benefit-card" *ngFor="let item of beneficios">
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+      </article>
+    </div>
+  </section>
+
+  <app-cart-sidebar></app-cart-sidebar>
+
+  <app-footer
+    [links]="footerLinks"
+    copyright="© 2026 Umami Foods. Todos os direitos reservados."
+  ></app-footer>
+</main>

@@ -1,0 +1,45 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <span class="auth-tag">Acesso Umami Foods</span>
+
+    <div class="card-header">
+      <h1>Entre na sua conta</h1>
+      <p class="description">Acesse sua conta para continuar</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="entrar()" class="auth-form">
+      <div class="input-group" *ngFor="let campo of campos">
+        <label>{{ campo.label }}</label>
+        <input
+          [type]="campo.type"
+          [formControlName]="campo.controlName"
+          [placeholder]="campo.placeholder"
+        />
+      </div>
+
+      <button
+        class="submit-btn"
+        [ngClass]="{
+          'success': statusLogin() === 'sucesso',
+          'error': statusLogin() === 'erro'
+        }"
+        type="submit"
+      >
+        {{
+          statusLogin() === 'sucesso'
+            ? 'Login realizado!'
+            : statusLogin() === 'erro'
+            ? 'Login invalido'
+            : 'Entrar'
+        }}
+      </button>
+    </form>
+
+    <p class="switch-text">
+      Nao possui conta?
+      <button type="button" class="text-btn" (click)="irParaCadastro()">
+        Cadastre-se
+      </button>
+    </p>
+  </section>
+</main>

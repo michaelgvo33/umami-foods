@@ -1,0 +1,65 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <span class="auth-tag">Cadastro Umami Foods</span>
+
+    <div class="card-header">
+      <h1>Crie sua conta</h1>
+      <p class="description">Cadastre-se para continuar sua experiencia com a Umami Foods</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      <div class="input-group" *ngFor="let campo of campos">
+        <label>{{ campo.label }}</label>
+        <input
+          [type]="campo.type"
+          [formControlName]="campo.controlName"
+          [placeholder]="campo.placeholder || ''"
+          (input)="onInputCampo(campo.controlName)"
+        />
+      </div>
+
+      <p class="erro-senha" *ngIf="senhasDiferentes">
+        As senhas nao coincidem.
+      </p>
+
+      <div class="password-rules">
+        <h3>Requisitos da senha</h3>
+
+        <div class="rules-list">
+          <div
+            class="rule-item"
+            *ngFor="let regra of regrasSenha"
+            [class.ok]="regra.ativa()"
+          >
+            <span class="rule-icon">{{ regra.ativa() ? '✓' : '•' }}</span>
+            <span>{{ regra.texto }}</span>
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="submit-btn"
+        [ngClass]="{
+          'success': statusCadastro() === 'sucesso',
+          'error': statusCadastro() === 'erro'
+        }"
+        type="submit"
+      >
+        {{
+          statusCadastro() === 'sucesso'
+            ? 'Cadastro realizado!'
+            : statusCadastro() === 'erro'
+            ? 'Verifique os dados'
+            : 'Cadastrar'
+        }}
+      </button>
+    </form>
+
+    <p class="switch-text">
+      Ja possui conta?
+      <button type="button" class="text-btn" (click)="irParaLogin()">
+        Entrar
+      </button>
+    </p>
+  </section>
+</main>

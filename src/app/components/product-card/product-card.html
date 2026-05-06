@@ -1,0 +1,25 @@
+<article class="product-card">
+  <span class="product-badge" *ngIf="produto.destaque">{{ produto.destaque }}</span>
+
+  <button type="button" class="product-image-box">
+    <img [src]="produto.imagem" [alt]="produto.nome" class="product-image" />
+  </button>
+
+  <div class="product-content">
+    <p class="product-category">{{ produto.categoria }}</p>
+    <h3>{{ produto.nome }}</h3>
+    <p class="product-description">{{ produto.descricao }}</p>
+
+    <p class="old-price" *ngIf="precoAntigo">
+      {{ formatarPreco(precoAntigo) }}
+    </p>
+
+    <p class="new-price">{{ formatarPreco(produto.preco) }}</p>
+  </div>
+
+  <div class="product-actions">
+    <button type="button" class="primary-btn full-width-btn" (click)="onAddToCart()">
+      {{ buttonLabel }}
+    </button>
+  </div>
+</article>
