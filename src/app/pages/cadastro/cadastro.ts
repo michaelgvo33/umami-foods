@@ -1,10 +1,15 @@
-import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { Usuario } from '../../models/usuario';
+
 import { CampoFormulario } from '../../interfaces/campo-formulario';
+import { Usuario } from '../../models/usuario';
+import { AuthService } from '../../services/auth.service';
 
 type RegraSenha = {
   texto: string;
@@ -16,45 +21,45 @@ type RegraSenha = {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './cadastro.html',
-  styleUrls: ['./cadastro.css']
+  styleUrl: './cadastro.css'
 })
 export class Cadastro {
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) {}
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly fb = inject(FormBuilder);
 
-  statusCadastro = signal<'normal' | 'sucesso' | 'erro'>('normal');
+  readonly statusCadastro = signal<'normal' | 'sucesso' | 'erro'>('normal');
+
   senhasDiferentes = false;
 
-  campos: CampoFormulario[] = [
+  readonly campos: CampoFormulario[] = [
     { label: 'Nome', type: 'text', controlName: 'nome', placeholder: 'Digite seu nome' },
-    { label: 'Email', type: 'email', controlName: 'email', placeholder: 'seu@email.com' },
+    { label: 'E-mail', type: 'email', controlName: 'email', placeholder: 'seu@email.com' },
     { label: 'Telefone', type: 'tel', controlName: 'telefone', placeholder: '(21) 99999-9999' },
-    { label: 'Senha', type: 'password', controlName: 'senha', placeholder: 'Crie sua senha' },
-    { label: 'Confirmar senha', type: 'password', controlName: 'confirmarSenha', placeholder: 'Confirme sua senha' }
+    { label: 'Senha', type: 'password', controlName: 'senha', placeholder: 'Crie uma senha' },
+    { label: 'Confirmar senha', type: 'password', controlName: 'confirmarSenha', placeholder: 'Digite a senha novamente' }
   ];
 
-  form = new FormGroup({
-    nome: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    telefone: new FormControl(''),
-    senha: new FormControl('', Validators.required),
-    confirmarSenha: new FormControl('', Validators.required),
+  readonly form = this.fb.group({
+    nome: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    telefone: [''],
+    senha: ['', Validators.required],
+    confirmarSenha: ['', Validators.required]
   });
 
-  regraMinimocaracteres = false;
+  regraMinimoCaracteres = false;
   regraMaximoCaracteres = false;
   regraLetraMaiuscula = false;
   regraCaracterEspecial = false;
   regraNumerosLetras = false;
 
-  regrasSenha: RegraSenha[] = [
-    { texto: 'Minimo de 8 caracteres', ativa: () => this.regraMinimocaracteres },
-    { texto: 'Maximo de 16 caracteres', ativa: () => this.regraMaximoCaracteres },
-    { texto: 'Pelo menos 1 letra maiuscula', ativa: () => this.regraLetraMaiuscula },
+  readonly regrasSenha: RegraSenha[] = [
+    { texto: 'Mínimo de 8 caracteres', ativa: () => this.regraMinimoCaracteres },
+    { texto: 'Máximo de 16 caracteres', ativa: () => this.regraMaximoCaracteres },
+    { texto: 'Pelo menos 1 letra maiúscula', ativa: () => this.regraLetraMaiuscula },
     { texto: 'Pelo menos 1 caractere especial', ativa: () => this.regraCaracterEspecial },
-    { texto: 'Combinacao de letras e numeros', ativa: () => this.regraNumerosLetras }
+    { texto: 'Combinação de letras e números', ativa: () => this.regraNumerosLetras }
   ];
 
   irParaLogin(): void {
@@ -63,7 +68,7 @@ export class Cadastro {
 
   onInputCampo(controlName: string): void {
     if (controlName === 'senha') {
-      this.validarSenha(this.form.get('senha')?.value ?? '');
+      this.validarSenha(this.form.controls.senha.value ?? '');
     }
 
     if (controlName === 'senha' || controlName === 'confirmarSenha') {
@@ -72,65 +77,65 @@ export class Cadastro {
   }
 
   validarSenha(senha: string): void {
-    const rxMin8 = /^.{8,}$/;
-    const rxMax16 = /^.{1,16}$/;
-    const rxMaiuscula = /[A-Z]/;
-    const rxEspecial = /[!@#$%^&*(),.?":{}|<>]/;
-    const rxNumero = /\d/;
-    const rxLetra = /[A-Za-z]/;
-
-    this.regraMinimocaracteres = rxMin8.test(senha);
-    this.regraMaximoCaracteres = rxMax16.test(senha);
-    this.regraLetraMaiuscula = rxMaiuscula.test(senha);
-    this.regraCaracterEspecial = rxEspecial.test(senha);
-    this.regraNumerosLetras = rxNumero.test(senha) && rxLetra.test(senha);
+    this.regraMinimoCaracteres = senha.length >= 8;
+    this.regraMaximoCaracteres = senha.length > 0 && senha.length <= 16;
+    this.regraLetraMaiuscula = /[A-Z]/.test(senha);
+    this.regraCaracterEspecial = /[!@#$%^&*(),.?":{}|<>]/.test(senha);
+    this.regraNumerosLetras = /\d/.test(senha) && /[A-Za-z]/.test(senha);
   }
 
   verificarSenhas(): void {
-    const senha = this.form.get('senha')?.value ?? '';
-    const confirmarSenha = this.form.get('confirmarSenha')?.value ?? '';
-    this.senhasDiferentes = senha !== '' && confirmarSenha !== '' && senha !== confirmarSenha;
+    const senha = this.form.controls.senha.value ?? '';
+    const confirmarSenha = this.form.controls.confirmarSenha.value ?? '';
+
+    this.senhasDiferentes =
+      senha !== '' && confirmarSenha !== '' && senha !== confirmarSenha;
   }
 
   onSubmit(): void {
-    const nome = this.form.get('nome')?.value ?? '';
-    const email = this.form.get('email')?.value ?? '';
-    const telefone = this.form.get('telefone')?.value ?? '';
-    const senha = this.form.get('senha')?.value ?? '';
-    const confirmarSenha = this.form.get('confirmarSenha')?.value ?? '';
+    this.validarSenha(this.form.controls.senha.value ?? '');
+    this.verificarSenhas();
 
-    const senhaValida =
-      this.regraMinimocaracteres &&
+    if (this.form.invalid || this.senhasDiferentes || !this.senhaValida()) {
+      this.statusCadastro.set('erro');
+      this.form.markAllAsTouched();
+      return;
+    }
+
+    const usuario: Usuario = {
+      nome: this.form.controls.nome.value ?? '',
+      email: this.form.controls.email.value ?? '',
+      telefone: this.form.controls.telefone.value ?? '',
+      senha: this.form.controls.senha.value ?? ''
+    };
+
+    this.authService.cadastrar(usuario);
+    this.statusCadastro.set('sucesso');
+
+    setTimeout(() => {
+      this.limparFormulario();
+      this.router.navigate(['/login']);
+    }, 1500);
+  }
+
+  private senhaValida(): boolean {
+    return (
+      this.regraMinimoCaracteres &&
       this.regraMaximoCaracteres &&
       this.regraLetraMaiuscula &&
       this.regraCaracterEspecial &&
-      this.regraNumerosLetras;
+      this.regraNumerosLetras
+    );
+  }
 
-    this.senhasDiferentes = senha !== confirmarSenha;
-
-    if (this.form.valid && !this.senhasDiferentes && senhaValida) {
-      const usuario: Usuario = {
-        nome,
-        email,
-        telefone: telefone ?? '',
-        senha
-      };
-
-      this.authService.cadastrar(usuario);
-      this.statusCadastro.set('sucesso');
-
-      setTimeout(() => {
-        this.form.reset();
-        this.senhasDiferentes = false;
-        this.regraMinimocaracteres = false;
-        this.regraMaximoCaracteres = false;
-        this.regraLetraMaiuscula = false;
-        this.regraCaracterEspecial = false;
-        this.regraNumerosLetras = false;
-        this.router.navigate(['/login']);
-      }, 1500);
-    } else {
-      this.statusCadastro.set('erro');
-    }
+  private limparFormulario(): void {
+    this.form.reset();
+    this.senhasDiferentes = false;
+    this.regraMinimoCaracteres = false;
+    this.regraMaximoCaracteres = false;
+    this.regraLetraMaiuscula = false;
+    this.regraCaracterEspecial = false;
+    this.regraNumerosLetras = false;
+    this.statusCadastro.set('normal');
   }
 }

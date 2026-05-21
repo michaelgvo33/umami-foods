@@ -1,76 +1,42 @@
 import { Injectable, signal } from '@angular/core';
-import { Usuario } from '../models/usuario';
 
-const USUARIO_CADASTRADO_KEY = 'usuarioCadastrado';
-const USUARIO_LOGADO_KEY = 'usuarioLogado';
+import { Usuario } from '../models/usuario';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  usuarioLogado = signal<Usuario | null>(this.getUsuarioLogadoStorage());
+  readonly usuarioLogado = signal<Usuario | null>(null);
+
+  private usuarioCadastrado: Usuario | null = null;
 
   cadastrar(usuario: Usuario): void {
-    localStorage.setItem(USUARIO_CADASTRADO_KEY, JSON.stringify(usuario));
-  }
-
-  getUsuarioCadastrado(): Usuario | null {
-    const usuario = localStorage.getItem(USUARIO_CADASTRADO_KEY);
-
-    if (!usuario) {
-      return null;
-    }
-
-    try {
-      return JSON.parse(usuario) as Usuario;
-    } catch {
-      return null;
-    }
+    this.usuarioCadastrado = usuario;
   }
 
   login(email: string, senha: string): boolean {
-    const usuario = this.getUsuarioCadastrado();
-
-    if (!usuario) {
+    if (!this.usuarioCadastrado) {
       return false;
     }
 
-    const credenciaisValidas =
-      usuario.email === email && usuario.senha === senha;
+    const loginValido =
+      this.usuarioCadastrado.email === email &&
+      this.usuarioCadastrado.senha === senha;
 
-    if (credenciaisValidas) {
-      localStorage.setItem(USUARIO_LOGADO_KEY, JSON.stringify(usuario));
-      this.usuarioLogado.set(usuario);
-      return true;
+    if (!loginValido) {
+      return false;
     }
 
-    return false;
+    this.usuarioLogado.set(this.usuarioCadastrado);
+
+    return true;
   }
 
   logout(): void {
-    localStorage.removeItem(USUARIO_LOGADO_KEY);
     this.usuarioLogado.set(null);
   }
 
   isAutenticado(): boolean {
     return this.usuarioLogado() !== null;
-  }
-
-  getUsuarioLogado(): Usuario | null {
-    return this.usuarioLogado();
-  }
-
-  private getUsuarioLogadoStorage(): Usuario | null {
-    const usuario = localStorage.getItem(USUARIO_LOGADO_KEY);
-
-    if (!usuario) {
-      return null;
-    }
-
-    try {
-      return JSON.parse(usuario) as Usuario;
-    } catch {
-      return null;
-    }
   }
 }

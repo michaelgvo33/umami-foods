@@ -2,7 +2,7 @@
   <app-header
     [navItems]="navItems"
     currentPage="Contato"
-  ></app-header>
+  />
 
   <section class="hero-section">
     <div class="hero-card">
@@ -16,69 +16,90 @@
     <div class="contact-grid">
       <section class="contact-card">
         <div class="section-header">
-          <h2>Nossos canais</h2>
-          <p>Escolha a melhor forma de falar com nossa equipe.</p>
+          <h2>Canais de contato</h2>
+          <p>Algumas opções para o cliente falar com a distribuidora.</p>
         </div>
 
         <div class="channels-grid">
-          <article class="channel-card" *ngFor="let canal of canais">
-            <h3>{{ canal.titulo }}</h3>
-            <strong>{{ canal.destaque }}</strong>
-            <p>{{ canal.descricao }}</p>
-          </article>
+          @for (canal of canais; track canal.titulo) {
+            <article class="channel-card">
+              <h3>{{ canal.titulo }}</h3>
+              <strong>{{ canal.destaque }}</strong>
+              <p>{{ canal.descricao }}</p>
+            </article>
+          }
         </div>
       </section>
 
       <section class="contact-card">
         <div class="section-header">
-          <h2>Envie sua mensagem</h2>
-          <p>Preencha os dados abaixo para falar com a nossa equipe.</p>
+          <h2>Formulário de contato</h2>
+          <p>Preencha os campos abaixo para simular o envio de uma mensagem.</p>
         </div>
 
-        <form [formGroup]="form" (ngSubmit)="enviarFormulario()" class="contact-form">
-          <div class="input-group" *ngFor="let campo of camposFormulario">
-            <label>{{ campo.label }}</label>
+        <form
+          [formGroup]="form"
+          (ngSubmit)="enviarFormulario()"
+          class="contact-form"
+        >
+          @for (campo of camposFormulario; track campo.controlName) {
+            <div class="input-group">
+              <label [for]="campo.controlName">{{ campo.label }}</label>
 
-            <input
-              *ngIf="campo.type === 'text' || campo.type === 'email' || campo.type === 'tel'"
-              [type]="campo.type"
-              [formControlName]="campo.controlName"
-              [placeholder]="campo.placeholder || ''"
-            />
+              @if (
+                campo.type === 'text' ||
+                campo.type === 'email' ||
+                campo.type === 'tel'
+              ) {
+                <input
+                  [id]="campo.controlName"
+                  [type]="campo.type"
+                  [formControlName]="campo.controlName"
+                  [placeholder]="campo.placeholder || ''"
+                />
+              }
 
-            <select
-              *ngIf="campo.type === 'select'"
-              [formControlName]="campo.controlName"
-            >
-              <option value="">Selecione um assunto</option>
-              <option *ngFor="let assunto of assuntos" [value]="assunto">
-                {{ assunto }}
-              </option>
-            </select>
+              @if (campo.type === 'select') {
+                <select
+                  [id]="campo.controlName"
+                  [formControlName]="campo.controlName"
+                >
+                  <option value="">Selecione um assunto</option>
 
-            <textarea
-              *ngIf="campo.type === 'textarea'"
-              [formControlName]="campo.controlName"
-              [rows]="campo.rows || 4"
-              [placeholder]="campo.placeholder || ''"
-            ></textarea>
-          </div>
+                  @for (assunto of assuntos; track assunto) {
+                    <option [value]="assunto">
+                      {{ assunto }}
+                    </option>
+                  }
+                </select>
+              }
+
+              @if (campo.type === 'textarea') {
+                <textarea
+                  [id]="campo.controlName"
+                  [formControlName]="campo.controlName"
+                  [rows]="campo.rows || 4"
+                  [placeholder]="campo.placeholder || ''"
+                ></textarea>
+              }
+            </div>
+          }
 
           <button
             class="submit-btn"
             [ngClass]="{
-              'success': statusEnvio() === 'sucesso',
-              'error': statusEnvio() === 'erro'
+              success: statusEnvio() === 'sucesso',
+              error: statusEnvio() === 'erro'
             }"
             type="submit"
           >
-            {{
-              statusEnvio() === 'sucesso'
-                ? 'Mensagem enviada!'
-                : statusEnvio() === 'erro'
-                ? 'Verifique os campos'
-                : 'Enviar mensagem'
-            }}
+            @if (statusEnvio() === 'sucesso') {
+              Mensagem enviada
+            } @else if (statusEnvio() === 'erro') {
+              Verifique os campos
+            } @else {
+              Enviar mensagem
+            }
           </button>
         </form>
       </section>
@@ -87,20 +108,22 @@
     <section class="faq-card">
       <div class="section-header">
         <h2>Perguntas frequentes</h2>
-        <p>Respostas rapidas para as duvidas mais comuns.</p>
+        <p>Algumas respostas simples sobre o funcionamento do projeto.</p>
       </div>
 
       <div class="faq-list">
-        <article class="faq-item" *ngFor="let item of faq">
-          <h3>{{ item.pergunta }}</h3>
-          <p>{{ item.resposta }}</p>
-        </article>
+        @for (item of faq; track item.pergunta) {
+          <article class="faq-item">
+            <h3>{{ item.pergunta }}</h3>
+            <p>{{ item.resposta }}</p>
+          </article>
+        }
       </div>
     </section>
   </section>
 
   <app-footer
     [links]="footerLinks"
-    copyright="© 2026 Umami Foods. Todos os direitos reservados."
-  ></app-footer>
+    copyright="© 2026 Umami Foods. Projeto acadêmico desenvolvido em Angular."
+  />
 </main>

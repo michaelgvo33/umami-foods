@@ -1,42 +1,48 @@
 <main class="auth-page">
   <section class="auth-card">
-    <span class="auth-tag">Acesso Umami Foods</span>
+    <span class="auth-tag">Acesso</span>
 
     <div class="card-header">
-      <h1>Entre na sua conta</h1>
-      <p class="description">Acesse sua conta para continuar</p>
+      <h1>Entrar na conta</h1>
+      <p class="description">
+        Informe seus dados para simular o acesso ao sistema da Umami Foods.
+      </p>
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="entrar()" class="auth-form">
-      <div class="input-group" *ngFor="let campo of campos">
-        <label>{{ campo.label }}</label>
-        <input
-          [type]="campo.type"
-          [formControlName]="campo.controlName"
-          [placeholder]="campo.placeholder"
-        />
-      </div>
+      @for (campo of campos; track campo.controlName) {
+        <div class="input-group">
+          <label [for]="campo.controlName">{{ campo.label }}</label>
+
+          <input
+            [id]="campo.controlName"
+            [type]="campo.type"
+            [formControlName]="campo.controlName"
+            [placeholder]="campo.placeholder || ''"
+          />
+        </div>
+      }
 
       <button
         class="submit-btn"
         [ngClass]="{
-          'success': statusLogin() === 'sucesso',
-          'error': statusLogin() === 'erro'
+          success: statusLogin() === 'sucesso',
+          error: statusLogin() === 'erro'
         }"
         type="submit"
       >
-        {{
-          statusLogin() === 'sucesso'
-            ? 'Login realizado!'
-            : statusLogin() === 'erro'
-            ? 'Login invalido'
-            : 'Entrar'
-        }}
+        @if (statusLogin() === 'sucesso') {
+          Login realizado
+        } @else if (statusLogin() === 'erro') {
+          Login inválido
+        } @else {
+          Entrar
+        }
       </button>
     </form>
 
     <p class="switch-text">
-      Nao possui conta?
+      Não possui conta?
       <button type="button" class="text-btn" (click)="irParaCadastro()">
         Cadastre-se
       </button>

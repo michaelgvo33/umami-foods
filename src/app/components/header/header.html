@@ -1,21 +1,30 @@
 <header class="header-shell">
   <div class="navbar">
     <a routerLink="/home" class="brand">
-      <img src="logo-dark.png" alt="Umami Foods" class="brand-logo" />
+      <img
+        src="logo-dark.png"
+        alt="Umami Foods"
+        class="brand-logo"
+      />
     </a>
 
     <nav class="nav-links">
-      <a
-        *ngFor="let item of navItems"
-        [routerLink]="item.route"
-        [class.active]="item.label === currentPage"
-      >
-        {{ item.label }}
-      </a>
+      @for (item of navItems; track item.label) {
+        <a
+          [routerLink]="item.route"
+          [class.active]="item.label === currentPage"
+        >
+          {{ item.label }}
+        </a>
+      }
     </nav>
 
     <div class="header-actions">
-      <button type="button" class="cart-button" (click)="cartService.abrirCarrinho()">
+      <button
+        type="button"
+        class="cart-button"
+        (click)="cartService.abrirCarrinho()"
+      >
         <span class="cart-icon" aria-hidden="true">
           <svg viewBox="0 0 24 24">
             <path
@@ -23,20 +32,31 @@
             />
           </svg>
         </span>
-        <span class="cart-text">Carrinho</span>
-        <span class="cart-count" *ngIf="cartService.quantidadeItens > 0">
-          {{ cartService.quantidadeItens }}
+
+        <span class="cart-text">
+          Carrinho
         </span>
+
+        @if (cartService.quantidadeItens > 0) {
+          <span class="cart-count">
+            {{ cartService.quantidadeItens }}
+          </span>
+        }
       </button>
 
-      <div class="user-area" *ngIf="authService.getUsuarioLogado() as usuario; else loginButton">
-        <span class="user-name">Olá, {{ usuario.nome }}</span>
-        <button type="button" class="nav-logout" (click)="logout()">Logout</button>
-      </div>
-
-      <ng-template #loginButton>
-        <a routerLink="/login" class="nav-login">Login</a>
-      </ng-template>
+      @if (authService.isAutenticado()) {
+        <button
+          type="button"
+          class="nav-logout"
+          (click)="logout()"
+        >
+          Sair
+        </button>
+      } @else {
+        <a routerLink="/login" class="nav-login">
+          Login
+        </a>
+      }
     </div>
   </div>
 </header>

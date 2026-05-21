@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { Produto } from '../../models/produto';
 
 @Component({
@@ -7,12 +8,14 @@ import { Produto } from '../../models/produto';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './product-card.html',
-  styleUrls: ['./product-card.css']
+  styleUrl: './product-card.css'
 })
 export class ProductCardComponent {
-  @Input() produto!: Produto;
+  @Input({ required: true }) produto!: Produto;
+
   @Input() precoAntigo?: number;
-  @Input() buttonLabel = 'Adicionar ao carrinho';
+
+  @Input() buttonLabel = 'Adicionar';
 
   @Output() addToCart = new EventEmitter<Produto>();
 
@@ -23,7 +26,7 @@ export class ProductCardComponent {
     });
   }
 
-  onAddToCart(): void {
+  adicionarAoCarrinho(): void {
     this.addToCart.emit(this.produto);
   }
 }

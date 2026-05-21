@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+
 import { CartService } from '../../services/cart.service';
 
 @Component({
@@ -7,8 +8,8 @@ import { CartService } from '../../services/cart.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './cart-sidebar.html',
-  styleUrls: ['./cart-sidebar.css']
+  styleUrl: './cart-sidebar.css'
 })
 export class CartSidebarComponent {
-  constructor(public cartService: CartService) {}
+  public readonly cartService = inject(CartService);
 }

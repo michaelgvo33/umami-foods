@@ -1,6 +1,10 @@
 <footer class="footer-text">
   <div class="footer-links">
-    <a *ngFor="let item of links" [routerLink]="item.route">{{ item.label }}</a>
+    @for (item of links; track item.label) {
+      <a [routerLink]="item.route">
+        {{ item.label }}
+      </a>
+    }
   </div>
 
   <p>{{ copyright }}</p>

@@ -1,9 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 :host {
   display: block;
   font-family: Arial, Helvetica, sans-serif;
@@ -11,69 +5,64 @@
 
 .produtos-page {
   min-height: 100vh;
-  background:
-    radial-gradient(circle at top, rgba(229, 57, 53, 0.08), transparent 30%),
-    #f7f4f1;
-  color: #111111;
+  background: #f6f2ec;
+  color: #222222;
 }
 
 .hero-section {
-  padding: 30px 24px 0;
+  padding: 24px 20px 0;
 }
 
 .hero-card {
   width: 100%;
-  max-width: 1240px;
+  max-width: 1180px;
   margin: 0 auto;
-  min-height: 320px;
-  border-radius: 30px;
-  padding: 52px;
+  min-height: 260px;
+  border-radius: 12px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background:
-    linear-gradient(rgba(17, 17, 17, 0.58), rgba(17, 17, 17, 0.78)),
-    linear-gradient(135deg, #111111 0%, #242424 48%, #d32f2f 100%);
+  background: #2b2b2b;
   color: #ffffff;
-  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.12);
+  border-left: 8px solid #c62828;
 }
 
 .hero-tag {
   width: fit-content;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 18px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: #c62828;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 16px;
 }
 
 .hero-card h1 {
-  max-width: 760px;
-  font-size: 52px;
-  line-height: 1.05;
-  margin-bottom: 14px;
+  max-width: 720px;
+  font-size: 40px;
+  line-height: 1.15;
+  margin-bottom: 12px;
 }
 
 .hero-card p {
   max-width: 640px;
-  color: #ededed;
-  font-size: 17px;
-  line-height: 1.7;
+  color: #eeeeee;
+  font-size: 16px;
+  line-height: 1.6;
 }
 
 .breadcrumb-shell {
-  padding: 18px 24px 0;
+  padding: 18px 20px 0;
 }
 
 .breadcrumb {
   width: 100%;
-  max-width: 1240px;
+  max-width: 1180px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
   color: #666666;
   font-size: 14px;
@@ -82,62 +71,56 @@
 .breadcrumb-item {
   border: none;
   background: none;
-  color: #555555;
+  color: #666666;
   font-size: 14px;
   cursor: pointer;
 }
 
 .breadcrumb-item.current {
-  color: #e53935;
-  font-weight: 700;
-  cursor: default;
-}
-
-.breadcrumb-item:disabled {
-  cursor: default;
+  color: #c62828;
+  font-weight: bold;
 }
 
 .catalog-shell {
   width: 100%;
-  max-width: 1240px;
+  max-width: 1180px;
   margin: 24px auto 0;
-  padding: 0 24px 56px;
+  padding: 0 20px 48px;
 }
 
 .categories-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 28px;
+  gap: 10px;
+  margin-bottom: 24px;
 }
 
 .category-chip {
-  height: 44px;
-  padding: 0 18px;
-  border-radius: 999px;
-  border: 1px solid #e8ddd4;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 6px;
+  border: 1px solid #d8cec3;
   background: #ffffff;
-  color: #111111;
+  color: #222222;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: bold;
   cursor: pointer;
-  transition: 0.2s ease;
 }
 
-.category-chip:hover,
-.category-chip.active {
-  background: #e53935;
-  border-color: #e53935;
+.category-chip.active,
+.category-chip:hover {
+  background: #c62828;
+  border-color: #c62828;
   color: #ffffff;
 }
 
 .section-header {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .section-header h2 {
-  font-size: 34px;
-  margin-bottom: 8px;
+  font-size: 28px;
+  margin-bottom: 6px;
 }
 
 .section-header p {
@@ -148,53 +131,46 @@
 .products-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
+  gap: 18px;
 }
 
 .product-card {
   position: relative;
   background: #ffffff;
-  border: 1px solid #ece6df;
-  border-radius: 24px;
-  padding: 20px;
+  border: 1px solid #e5ddd2;
+  border-radius: 10px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.06);
-  transition: 0.2s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 34px rgba(0, 0, 0, 0.1);
 }
 
 .product-badge {
   position: absolute;
-  top: 16px;
-  left: 16px;
-  background: #e53935;
+  top: 14px;
+  left: 14px;
+  background: #c62828;
   color: #ffffff;
-  font-size: 12px;
-  font-weight: 800;
-  padding: 7px 10px;
-  border-radius: 999px;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 5px 8px;
+  border-radius: 4px;
 }
 
 .product-image-box {
-  height: 190px;
-  border: none;
-  border-radius: 18px;
-  background: linear-gradient(180deg, #fcfbfa 0%, #f5f0eb 100%);
+  height: 180px;
+  border: 1px solid #ece6df;
+  border-radius: 8px;
+  background: #faf7f4;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
   cursor: pointer;
 }
 
 .product-image {
-  max-width: 135px;
-  max-height: 150px;
+  max-width: 120px;
+  max-height: 140px;
   object-fit: contain;
 }
 
@@ -203,17 +179,14 @@
 }
 
 .product-category {
-  color: #e53935;
+  color: #c62828;
   font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  margin-bottom: 8px;
-  letter-spacing: 0.04em;
+  font-weight: bold;
+  margin-bottom: 6px;
 }
 
 .product-card h3 {
-  font-size: 20px;
-  line-height: 1.3;
+  font-size: 18px;
   margin-bottom: 10px;
 }
 
@@ -221,108 +194,104 @@
   color: #666666;
   font-size: 14px;
   line-height: 1.6;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
 }
 
 .product-price {
   display: block;
-  font-size: 25px;
-  color: #111111;
-  margin-bottom: 18px;
+  font-size: 22px;
+  margin-bottom: 16px;
 }
 
 .product-actions,
 .detail-actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
 .primary-btn,
 .ghost-btn {
-  height: 46px;
-  border-radius: 14px;
+  height: 42px;
+  border-radius: 6px;
   font-size: 14px;
-  font-weight: 800;
+  font-weight: bold;
   cursor: pointer;
-  transition: 0.2s ease;
 }
 
 .primary-btn {
   flex: 1;
-  min-width: 170px;
   border: none;
-  background: #e53935;
+  background: #c62828;
   color: #ffffff;
 }
 
 .primary-btn:hover {
-  background: #c62828;
+  background: #a82020;
 }
 
 .ghost-btn {
-  border: 1px solid #dfd4ca;
+  border: 1px solid #d8cec3;
   background: #ffffff;
-  color: #111111;
-  padding: 0 18px;
+  color: #222222;
+  padding: 0 14px;
 }
 
 .ghost-btn:hover {
-  border-color: #e53935;
-  color: #e53935;
+  border-color: #c62828;
+  color: #c62828;
 }
 
 .detail-card {
   background: #ffffff;
-  border: 1px solid #ece6df;
-  border-radius: 28px;
-  padding: 28px;
+  border: 1px solid #e5ddd2;
+  border-radius: 10px;
+  padding: 24px;
   display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 30px;
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.06);
+  grid-template-columns: 320px 1fr;
+  gap: 24px;
 }
 
 .detail-image-box {
-  min-height: 320px;
-  border-radius: 22px;
-  background: linear-gradient(180deg, #fcfbfa 0%, #f5f0eb 100%);
+  min-height: 280px;
+  border: 1px solid #ece6df;
+  border-radius: 8px;
+  background: #faf7f4;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .detail-image {
-  max-width: 220px;
-  max-height: 260px;
+  max-width: 180px;
+  max-height: 220px;
   object-fit: contain;
 }
 
 .detail-category {
   display: inline-block;
-  color: #e53935;
-  font-size: 13px;
-  font-weight: 800;
-  text-transform: uppercase;
-  margin-bottom: 12px;
+  color: #c62828;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 .detail-content h2 {
-  font-size: 38px;
-  margin-bottom: 12px;
+  font-size: 32px;
+  margin-bottom: 10px;
 }
 
 .detail-description {
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: 15px;
+  line-height: 1.6;
   color: #666666;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .detail-price {
   display: block;
-  font-size: 30px;
-  margin-bottom: 22px;
+  font-size: 26px;
+  margin-bottom: 20px;
 }
 
 @media (max-width: 1100px) {
@@ -337,11 +306,11 @@
 
 @media (max-width: 860px) {
   .hero-card {
-    padding: 34px 26px;
+    padding: 30px 24px;
   }
 
   .hero-card h1 {
-    font-size: 38px;
+    font-size: 34px;
   }
 }
 
@@ -349,19 +318,23 @@
   .hero-section,
   .breadcrumb-shell,
   .catalog-shell {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding-left: 14px;
+    padding-right: 14px;
   }
 
   .products-grid {
     grid-template-columns: 1fr;
   }
 
+  .hero-card {
+    padding: 24px 18px;
+  }
+
   .hero-card h1 {
-    font-size: 30px;
+    font-size: 28px;
   }
 
   .section-header h2 {
-    font-size: 28px;
+    font-size: 24px;
   }
 }

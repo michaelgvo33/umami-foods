@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+
 import { Produto } from '../models/produto';
 
 export interface CartItem extends Produto {
@@ -9,19 +10,19 @@ export interface CartItem extends Produto {
   providedIn: 'root'
 })
 export class CartService {
-  carrinho = signal<CartItem[]>([]);
-  carrinhoAberto = signal(false);
+  readonly carrinho = signal<CartItem[]>([]);
+  readonly carrinhoAberto = signal(false);
 
   get quantidadeItens(): number {
     return this.carrinho().reduce(
-      (total: number, item: CartItem) => total + item.quantidade,
+      (total, item) => total + item.quantidade,
       0
     );
   }
 
   get totalCarrinho(): number {
     return this.carrinho().reduce(
-      (total: number, item: CartItem) => total + item.preco * item.quantidade,
+      (total, item) => total + item.preco * item.quantidade,
       0
     );
   }
@@ -36,7 +37,7 @@ export class CartService {
 
   adicionarAoCarrinho(produto: Produto): void {
     const itens = [...this.carrinho()];
-    const itemExistente = itens.find((item: CartItem) => item.id === produto.id);
+    const itemExistente = itens.find((item) => item.id === produto.id);
 
     if (itemExistente) {
       itemExistente.quantidade += 1;
@@ -48,31 +49,34 @@ export class CartService {
     }
 
     this.carrinho.set(itens);
-    this.carrinhoAberto.set(true);
+    this.abrirCarrinho();
   }
 
   aumentarQuantidade(id: number): void {
-    this.carrinho.set(
-      this.carrinho().map((item: CartItem) =>
-        item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item
-      )
+    const itens = this.carrinho().map((item) =>
+      item.id === id
+        ? { ...item, quantidade: item.quantidade + 1 }
+        : item
     );
+
+    this.carrinho.set(itens);
   }
 
   diminuirQuantidade(id: number): void {
-    this.carrinho.set(
-      this.carrinho()
-        .map((item: CartItem) =>
-          item.id === id ? { ...item, quantidade: item.quantidade - 1 } : item
-        )
-        .filter((item: CartItem) => item.quantidade > 0)
-    );
+    const itens = this.carrinho()
+      .map((item) =>
+        item.id === id
+          ? { ...item, quantidade: item.quantidade - 1 }
+          : item
+      )
+      .filter((item) => item.quantidade > 0);
+
+    this.carrinho.set(itens);
   }
 
   removerItem(id: number): void {
-    this.carrinho.set(
-      this.carrinho().filter((item: CartItem) => item.id !== id)
-    );
+    const itens = this.carrinho().filter((item) => item.id !== id);
+    this.carrinho.set(itens);
   }
 
   formatarPreco(valor: number): string {

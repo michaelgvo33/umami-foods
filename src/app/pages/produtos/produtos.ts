@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { HeaderComponent } from '../../components/header/header';
-import { FooterComponent } from '../../components/footer/footer';
+import { Component, inject } from '@angular/core';
+
 import { CartSidebarComponent } from '../../components/cart-sidebar/cart-sidebar';
-import { CartService } from '../../services/cart.service';
-import { ProdutoService } from '../../services/produto.service';
-import { Produto } from '../../models/produto';
+import { FooterComponent } from '../../components/footer/footer';
+import { HeaderComponent } from '../../components/header/header';
+
 import { NavItem } from '../../interfaces/nav-item';
 import { HeroContent } from '../../interfaces/hero-content';
+import { Produto } from '../../models/produto';
+import { CartService } from '../../services/cart.service';
+import { ProdutoService } from '../../services/produto.service';
 
 type Categoria = 'Todos' | Produto['categoria'];
 
@@ -21,32 +23,28 @@ type BreadcrumbItem = {
   standalone: true,
   imports: [CommonModule, HeaderComponent, FooterComponent, CartSidebarComponent],
   templateUrl: './produtos.html',
-  styleUrls: ['./produtos.css']
+  styleUrl: './produtos.css'
 })
 export class Produtos {
-  constructor(
-    public cartService: CartService,
-    private produtoService: ProdutoService
-  ) {
-    this.produtos = this.produtoService.getProdutos();
-  }
+  public readonly cartService = inject(CartService);
+  private readonly produtoService = inject(ProdutoService);
 
-  navItems: NavItem[] = [
+  readonly navItems: NavItem[] = [
     { label: 'Home', route: '/home' },
     { label: 'Produtos', route: '/produtos' },
     { label: 'Contato', route: '/contato' }
   ];
 
-  footerLinks: NavItem[] = [...this.navItems];
+  readonly footerLinks: NavItem[] = this.navItems;
 
-  hero: HeroContent = {
-    tag: 'Catalogo Umami Foods',
-    title: 'Produtos japoneses para uma operacao profissional',
+  readonly hero: HeroContent = {
+    tag: 'Catálogo Umami Foods',
+    title: 'Produtos orientais para restaurantes e pequenos negócios',
     description:
-      'Ingredientes, utensilios, loucas e embalagens com a identidade visual, qualidade e praticidade que combinam com a Umami Foods.'
+      'Catálogo com ingredientes, utensílios e embalagens usados em operações de comida japonesa.'
   };
 
-  categorias: Categoria[] = [
+  readonly categorias: Categoria[] = [
     'Todos',
     'Arroz e Nori',
     'Molhos e Temperos',
@@ -58,14 +56,17 @@ export class Produtos {
 
   categoriaSelecionada: Categoria = 'Todos';
   produtoSelecionado: Produto | null = null;
-  produtos: Produto[] = [];
+
+  readonly produtos: Produto[] = this.produtoService.getProdutos();
 
   get produtosFiltrados(): Produto[] {
     if (this.categoriaSelecionada === 'Todos') {
       return this.produtos;
     }
 
-    return this.produtos.filter((produto) => produto.categoria === this.categoriaSelecionada);
+    return this.produtos.filter(
+      (produto) => produto.categoria === this.categoriaSelecionada
+    );
   }
 
   get breadcrumbItems(): BreadcrumbItem[] {
@@ -75,11 +76,17 @@ export class Produtos {
     ];
 
     if (this.categoriaSelecionada !== 'Todos') {
-      items.push({ label: this.categoriaSelecionada, action: 'categoria' });
+      items.push({
+        label: this.categoriaSelecionada,
+        action: 'categoria'
+      });
     }
 
     if (this.produtoSelecionado) {
-      items.push({ label: this.produtoSelecionado.nome, action: 'produto' });
+      items.push({
+        label: this.produtoSelecionado.nome,
+        action: 'produto'
+      });
     }
 
     return items;
@@ -100,9 +107,10 @@ export class Produtos {
   }
 
   onBreadcrumbClick(item: BreadcrumbItem): void {
-    if (item.action === 'produtos') {
+    if (item.action === 'home' || item.action === 'produtos') {
       this.categoriaSelecionada = 'Todos';
       this.produtoSelecionado = null;
+      return;
     }
 
     if (item.action === 'categoria') {
@@ -112,5 +120,9 @@ export class Produtos {
 
   formatarPreco(valor: number): string {
     return this.cartService.formatarPreco(valor);
+  }
+
+  adicionarAoCarrinho(produto: Produto): void {
+    this.cartService.adicionarAoCarrinho(produto);
   }
 }

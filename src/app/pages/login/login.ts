@@ -1,13 +1,18 @@
-import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { AuthService } from '../../services/auth.service';
 
 type CampoLogin = {
   label: string;
   type: 'email' | 'password';
-  controlName: string;
+  controlName: 'email' | 'senha';
   placeholder: string;
 };
 
@@ -16,19 +21,18 @@ type CampoLogin = {
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  styleUrl: './login.css'
 })
 export class Login {
-  constructor(
-    private router: Router,
-    private authService: AuthService
-  ) {}
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+  private readonly fb = inject(FormBuilder);
 
-  statusLogin = signal<'normal' | 'sucesso' | 'erro'>('normal');
+  readonly statusLogin = signal<'normal' | 'sucesso' | 'erro'>('normal');
 
-  campos: CampoLogin[] = [
+  readonly campos: CampoLogin[] = [
     {
-      label: 'Email',
+      label: 'E-mail',
       type: 'email',
       controlName: 'email',
       placeholder: 'seu@email.com'
@@ -37,13 +41,13 @@ export class Login {
       label: 'Senha',
       type: 'password',
       controlName: 'senha',
-      placeholder: '••••••••'
+      placeholder: 'Digite sua senha'
     }
   ];
 
-  loginForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    senha: new FormControl('', Validators.required),
+  readonly loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    senha: ['', Validators.required]
   });
 
   irParaCadastro(): void {
@@ -51,19 +55,26 @@ export class Login {
   }
 
   entrar(): void {
-    const emailDigitado = this.loginForm.get('email')?.value ?? '';
-    const senhaDigitada = this.loginForm.get('senha')?.value ?? '';
-
-    const sucesso = this.authService.login(emailDigitado, senhaDigitada);
-
-    if (sucesso) {
-      this.statusLogin.set('sucesso');
-
-      setTimeout(() => {
-        this.router.navigate(['/home']);
-      }, 1200);
-    } else {
+    if (this.loginForm.invalid) {
       this.statusLogin.set('erro');
+      this.loginForm.markAllAsTouched();
+      return;
     }
+
+    const email = this.loginForm.controls.email.value ?? '';
+    const senha = this.loginForm.controls.senha.value ?? '';
+
+    const loginValido = this.authService.login(email, senha);
+
+    if (!loginValido) {
+      this.statusLogin.set('erro');
+      return;
+    }
+
+    this.statusLogin.set('sucesso');
+
+    setTimeout(() => {
+      this.router.navigate(['/home']);
+    }, 1200);
   }
 }

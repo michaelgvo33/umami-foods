@@ -1,121 +1,163 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HeaderComponent } from '../../components/header/header';
+import { Component, inject, signal } from '@angular/core';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
+
 import { FooterComponent } from '../../components/footer/footer';
-import { NavItem } from '../../interfaces/nav-item';
-import { HeroContent } from '../../interfaces/hero-content';
-import { FaqItem } from '../../interfaces/faq-item';
+import { HeaderComponent } from '../../components/header/header';
+
 import { CanalContato } from '../../interfaces/canal-contato';
 import { CampoFormulario } from '../../interfaces/campo-formulario';
+import { FaqItem } from '../../interfaces/faq-item';
+import { HeroContent } from '../../interfaces/hero-content';
+import { NavItem } from '../../interfaces/nav-item';
 
 @Component({
   selector: 'app-contato',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, HeaderComponent, FooterComponent],
   templateUrl: './contato.html',
-  styleUrls: ['./contato.css']
+  styleUrl: './contato.css'
 })
 export class Contato {
-  statusEnvio = signal<'normal' | 'sucesso' | 'erro'>('normal');
+  private readonly fb = inject(FormBuilder);
 
-  navItems: NavItem[] = [
+  readonly statusEnvio = signal<'normal' | 'sucesso' | 'erro'>('normal');
+
+  readonly navItems: NavItem[] = [
     { label: 'Home', route: '/home' },
     { label: 'Produtos', route: '/produtos' },
     { label: 'Contato', route: '/contato' }
   ];
 
-  footerLinks: NavItem[] = [...this.navItems];
+  readonly footerLinks: NavItem[] = this.navItems;
 
-  hero: HeroContent = {
-    tag: 'Fale com a Umami Foods',
-    title: 'Canais de comunicação e atendimento',
+  readonly hero: HeroContent = {
+    tag: 'Contato',
+    title: 'Fale com a Umami Foods',
     description:
-      'Entre em contato com nossa equipe para tirar dúvidas, acompanhar pedidos, solicitar orcamentos ou resolver qualquer problema com maior rapidez.'
+      'Use esta página para simular o contato com a distribuidora, tirar dúvidas sobre produtos ou solicitar um orçamento.'
   };
 
-  canais: CanalContato[] = [
+  readonly canais: CanalContato[] = [
     {
-      titulo: 'WhatsApp Comercial',
+      titulo: 'WhatsApp comercial',
       destaque: '(21) 99999-9999',
-      descricao: 'Atendimento rápido para pedidos, cotações e suporte comercial.'
+      descricao: 'Canal pensado para pedidos, dúvidas rápidas e cotações.'
     },
     {
       titulo: 'E-mail',
       destaque: 'contato@umamifoods.com.br',
-      descricao: 'Envie dúvidas, solicitações e informações sobre pedidos.'
+      descricao: 'Opção para enviar solicitações com mais detalhes.'
     },
     {
-      titulo: 'Horario de Atendimento',
-      destaque: 'Seg a Sex, 08h as 18h',
-      descricao: 'Nossa equipe comercial esta disponível em horário comercial.'
+      titulo: 'Horário de atendimento',
+      destaque: 'Segunda a sexta, das 08h às 18h',
+      descricao: 'Atendimento em horário comercial para clientes e parceiros.'
     }
   ];
 
-  assuntos: string[] = [
-    'Duvidas referente a entrega',
-    'Problema com compra',
+  readonly assuntos: string[] = [
+    'Dúvida sobre entrega',
+    'Problema com pedido',
     'Acompanhar pedido',
-    'Solicitacao de orcamento',
-    'Informacoes sobre produtos',
-    'Troca ou devolucao',
+    'Solicitação de orçamento',
+    'Informações sobre produtos',
+    'Troca ou devolução',
     'Problema no pagamento',
     'Cadastro de cliente',
     'Parceria comercial',
-    'Reclamacao',
-    'Sugestao',
+    'Reclamação',
+    'Sugestão',
     'Outros'
   ];
 
-  faq: FaqItem[] = [
+  readonly faq: FaqItem[] = [
     {
-      pergunta: 'Qual o prazo de entrega?',
-      resposta: 'O prazo varia conforme a região e o volume do pedido. Nossa equipe confirma isso no atendimento.'
+      pergunta: 'Qual é o prazo de entrega?',
+      resposta:
+        'O prazo depende da região e do volume do pedido. No projeto, essa informação seria confirmada pelo atendimento.'
     },
     {
-      pergunta: 'Vocês atendem empresas e restaurantes?',
-      resposta: 'Sim. A Umami Foods atende restaurantes, mercados, operacoes de delivery e parceiros comerciais.'
+      pergunta: 'A Umami Foods atende restaurantes?',
+      resposta:
+        'Sim. A proposta do site é atender restaurantes, mercados, deliveries e pequenos negócios.'
     },
     {
       pergunta: 'Posso pedir orçamento antes de comprar?',
-      resposta: 'Sim. Você pode solicitar um orcamento pelo formulario, WhatsApp ou e-mail.'
+      resposta:
+        'Sim. O cliente pode simular uma solicitação pelo formulário ou pelos canais de contato.'
     },
     {
       pergunta: 'Como acompanho meu pedido?',
-      resposta: 'Você pode falar com nosso atendimento informando nome, telefone ou numero do pedido.'
+      resposta:
+        'O acompanhamento seria feito informando nome, telefone ou número do pedido.'
     },
     {
-      pergunta: 'Vocês fazem troca em caso de problema?',
-      resposta: 'Sim. Cada caso e analisado pela equipe para orientar troca, ajuste ou suporte adequado.'
+      pergunta: 'O site já envia a mensagem de verdade?',
+      resposta:
+        'Não. Nesta versão acadêmica, o formulário apenas valida os dados e simula o envio.'
     }
   ];
 
-  camposFormulario: CampoFormulario[] = [
-    { label: 'Nome', controlName: 'nome', type: 'text', placeholder: 'Digite seu nome' },
-    { label: 'Email', controlName: 'email', type: 'email', placeholder: 'seu@email.com' },
-    { label: 'Telefone', controlName: 'telefone', type: 'tel', placeholder: '(21) 99999-9999' },
-    { label: 'Assunto', controlName: 'assunto', type: 'select' },
-    { label: 'Mensagem', controlName: 'mensagem', type: 'textarea', placeholder: 'Escreva aqui sua mensagem', rows: 5 }
+  readonly camposFormulario: CampoFormulario[] = [
+    {
+      label: 'Nome',
+      controlName: 'nome',
+      type: 'text',
+      placeholder: 'Digite seu nome'
+    },
+    {
+      label: 'E-mail',
+      controlName: 'email',
+      type: 'email',
+      placeholder: 'seu@email.com'
+    },
+    {
+      label: 'Telefone',
+      controlName: 'telefone',
+      type: 'tel',
+      placeholder: '(21) 99999-9999'
+    },
+    {
+      label: 'Assunto',
+      controlName: 'assunto',
+      type: 'select'
+    },
+    {
+      label: 'Mensagem',
+      controlName: 'mensagem',
+      type: 'textarea',
+      placeholder: 'Digite sua mensagem',
+      rows: 5
+    }
   ];
 
-  form = new FormGroup({
-    nome: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    telefone: new FormControl(''),
-    assunto: new FormControl('', Validators.required),
-    mensagem: new FormControl('', [Validators.required, Validators.minLength(10)])
+  readonly form = this.fb.group({
+    nome: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    telefone: [''],
+    assunto: ['', Validators.required],
+    mensagem: ['', [Validators.required, Validators.minLength(10)]]
   });
 
   enviarFormulario(): void {
-    if (this.form.valid) {
-      console.log('Mensagem enviada:', this.form.value);
-      this.statusEnvio.set('sucesso');
-      setTimeout(() => {
-        this.form.reset();
-        this.statusEnvio.set('normal');
-      }, 2000);
-    } else {
+    if (this.form.invalid) {
       this.statusEnvio.set('erro');
+      this.form.markAllAsTouched();
+      return;
     }
+
+    console.log('Dados do formulário:', this.form.value);
+
+    this.statusEnvio.set('sucesso');
+
+    setTimeout(() => {
+      this.form.reset();
+      this.statusEnvio.set('normal');
+    }, 2000);
   }
 }

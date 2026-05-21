@@ -4,8 +4,8 @@ export type CartCategory =
   | 'Arroz e Nori'
   | 'Molhos e Temperos'
   | 'Massas e Bases'
-  | 'Utensilios'
-  | 'Loucas e Servico'
+  | 'Utensílios'
+  | 'Louças e Serviço'
   | 'Embalagens';
 
 export type CartProduct = {
@@ -28,11 +28,14 @@ const STORAGE_KEY = 'umami-carrinho';
   providedIn: 'root'
 })
 export class CartService {
-  carrinho = signal<CartItem[]>(this.loadCart());
-  carrinhoAberto = signal(false);
+  readonly carrinho = signal<CartItem[]>(this.carregarCarrinho());
+  readonly carrinhoAberto = signal(false);
 
   get quantidadeItens(): number {
-    return this.carrinho().reduce((total, item) => total + item.quantidade, 0);
+    return this.carrinho().reduce(
+      (total, item) => total + item.quantidade,
+      0
+    );
   }
 
   get totalCarrinho(): number {
@@ -52,10 +55,10 @@ export class CartService {
 
   adicionarAoCarrinho(produto: CartProduct): void {
     const itens = [...this.carrinho()];
-    const item = itens.find((produtoCarrinho) => produtoCarrinho.id === produto.id);
+    const itemEncontrado = itens.find((item) => item.id === produto.id);
 
-    if (item) {
-      item.quantidade += 1;
+    if (itemEncontrado) {
+      itemEncontrado.quantidade += 1;
     } else {
       itens.push({
         ...produto,
@@ -63,31 +66,35 @@ export class CartService {
       });
     }
 
-    this.updateCart(itens);
+    this.atualizarCarrinho(itens);
     this.abrirCarrinho();
   }
 
   aumentarQuantidade(id: number): void {
     const itens = this.carrinho().map((item) =>
-      item.id === id ? { ...item, quantidade: item.quantidade + 1 } : item
+      item.id === id
+        ? { ...item, quantidade: item.quantidade + 1 }
+        : item
     );
 
-    this.updateCart(itens);
+    this.atualizarCarrinho(itens);
   }
 
   diminuirQuantidade(id: number): void {
     const itens = this.carrinho()
       .map((item) =>
-        item.id === id ? { ...item, quantidade: item.quantidade - 1 } : item
+        item.id === id
+          ? { ...item, quantidade: item.quantidade - 1 }
+          : item
       )
       .filter((item) => item.quantidade > 0);
 
-    this.updateCart(itens);
+    this.atualizarCarrinho(itens);
   }
 
   removerItem(id: number): void {
     const itens = this.carrinho().filter((item) => item.id !== id);
-    this.updateCart(itens);
+    this.atualizarCarrinho(itens);
   }
 
   formatarPreco(valor: number): string {
@@ -97,25 +104,25 @@ export class CartService {
     });
   }
 
-  private loadCart(): CartItem[] {
+  private carregarCarrinho(): CartItem[] {
     if (typeof localStorage === 'undefined') {
       return [];
     }
 
-    const cart = localStorage.getItem(STORAGE_KEY);
+    const carrinhoSalvo = localStorage.getItem(STORAGE_KEY);
 
-    if (!cart) {
+    if (!carrinhoSalvo) {
       return [];
     }
 
     try {
-      return JSON.parse(cart) as CartItem[];
+      return JSON.parse(carrinhoSalvo) as CartItem[];
     } catch {
       return [];
     }
   }
 
-  private updateCart(itens: CartItem[]): void {
+  private atualizarCarrinho(itens: CartItem[]): void {
     this.carrinho.set(itens);
 
     if (typeof localStorage !== 'undefined') {

@@ -1,49 +1,103 @@
-<div class="cart-overlay" *ngIf="cartService.carrinhoAberto()" (click)="cartService.fecharCarrinho()">
-  <aside class="cart-panel" (click)="$event.stopPropagation()">
-    <div class="cart-header">
-      <div>
-        <h2>Seu carrinho</h2>
-        <p>{{ cartService.quantidadeItens }} item(ns)</p>
-      </div>
-
-      <button type="button" class="close-btn" (click)="cartService.fecharCarrinho()">X</button>
-    </div>
-
-    <div class="empty-cart" *ngIf="cartService.carrinho().length === 0">
-      <h3>Carrinho vazio</h3>
-      <p>Adicione produtos para montar seu pedido.</p>
-    </div>
-
-    <div class="cart-items" *ngIf="cartService.carrinho().length > 0">
-      <article class="cart-item" *ngFor="let item of cartService.carrinho()">
-        <img [src]="item.imagem" [alt]="item.nome" class="cart-item-image" />
-
-        <div class="cart-item-info">
-          <h3>{{ item.nome }}</h3>
-          <p>{{ cartService.formatarPreco(item.preco) }}</p>
-
-          <div class="quantity-controls">
-            <button type="button" (click)="cartService.diminuirQuantidade(item.id)">-</button>
-            <span>{{ item.quantidade }}</span>
-            <button type="button" (click)="cartService.aumentarQuantidade(item.id)">+</button>
-          </div>
-
-          <strong>{{ cartService.formatarPreco(item.preco * item.quantidade) }}</strong>
+@if (cartService.carrinhoAberto()) {
+  <div
+    class="cart-overlay"
+    (click)="cartService.fecharCarrinho()"
+  >
+    <aside
+      class="cart-panel"
+      (click)="$event.stopPropagation()"
+    >
+      <div class="cart-header">
+        <div>
+          <h2>Seu carrinho</h2>
+          <p>{{ cartService.quantidadeItens }} item(ns)</p>
         </div>
 
-        <button type="button" class="remove-btn" (click)="cartService.removerItem(item.id)">
-          Remover
+        <button
+          type="button"
+          class="close-btn"
+          (click)="cartService.fecharCarrinho()"
+        >
+          X
         </button>
-      </article>
-    </div>
-
-    <div class="cart-footer" *ngIf="cartService.carrinho().length > 0">
-      <div class="cart-total">
-        <span>Total</span>
-        <strong>{{ cartService.formatarPreco(cartService.totalCarrinho) }}</strong>
       </div>
 
-      <button type="button" class="checkout-btn">Finalizar pedido</button>
-    </div>
-  </aside>
-</div>
+      @if (cartService.carrinho().length === 0) {
+        <div class="empty-cart">
+          <h3>Carrinho vazio</h3>
+          <p>Adicione produtos para montar o pedido.</p>
+        </div>
+      }
+
+      @if (cartService.carrinho().length > 0) {
+        <div class="cart-items">
+          @for (item of cartService.carrinho(); track item.id) {
+            <article class="cart-item">
+              <img
+                [src]="item.imagem"
+                [alt]="item.nome"
+                class="cart-item-image"
+              />
+
+              <div class="cart-item-info">
+                <h3>{{ item.nome }}</h3>
+
+                <p>
+                  {{ cartService.formatarPreco(item.preco) }}
+                </p>
+
+                <div class="quantity-controls">
+                  <button
+                    type="button"
+                    (click)="cartService.diminuirQuantidade(item.id)"
+                  >
+                    -
+                  </button>
+
+                  <span>{{ item.quantidade }}</span>
+
+                  <button
+                    type="button"
+                    (click)="cartService.aumentarQuantidade(item.id)"
+                  >
+                    +
+                  </button>
+                </div>
+
+                <strong>
+                  {{
+                    cartService.formatarPreco(
+                      item.preco * item.quantidade
+                    )
+                  }}
+                </strong>
+              </div>
+
+              <button
+                type="button"
+                class="remove-btn"
+                (click)="cartService.removerItem(item.id)"
+              >
+                Remover
+              </button>
+            </article>
+          }
+        </div>
+
+        <div class="cart-footer">
+          <div class="cart-total">
+            <span>Total</span>
+
+            <strong>
+              {{ cartService.formatarPreco(cartService.totalCarrinho) }}
+            </strong>
+          </div>
+
+          <button type="button" class="checkout-btn">
+            Finalizar pedido
+          </button>
+        </div>
+      }
+    </aside>
+  </div>
+}
