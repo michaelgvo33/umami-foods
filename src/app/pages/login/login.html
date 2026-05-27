@@ -1,0 +1,51 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <span class="auth-tag">Acesso</span>
+
+    <div class="card-header">
+      <h1>Entrar na conta</h1>
+      <p class="description">
+        Informe seus dados para simular o acesso ao sistema da Umami Foods.
+      </p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="entrar()" class="auth-form">
+      @for (campo of campos; track campo.controlName) {
+        <div class="input-group">
+          <label [for]="campo.controlName">{{ campo.label }}</label>
+
+          <input
+            [id]="campo.controlName"
+            [type]="campo.type"
+            [formControlName]="campo.controlName"
+            [placeholder]="campo.placeholder || ''"
+          />
+        </div>
+      }
+
+      <button
+        class="submit-btn"
+        [ngClass]="{
+          success: statusLogin() === 'sucesso',
+          error: statusLogin() === 'erro'
+        }"
+        type="submit"
+      >
+        @if (statusLogin() === 'sucesso') {
+          Login realizado
+        } @else if (statusLogin() === 'erro') {
+          Login inválido
+        } @else {
+          Entrar
+        }
+      </button>
+    </form>
+
+    <p class="switch-text">
+      Não possui conta?
+      <button type="button" class="text-btn" (click)="irParaCadastro()">
+        Cadastre-se
+      </button>
+    </p>
+  </section>
+</main>

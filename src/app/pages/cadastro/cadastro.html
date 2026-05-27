@@ -1,0 +1,76 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <span class="auth-tag">Cadastro</span>
+
+    <div class="card-header">
+      <h1>Criar conta</h1>
+      <p class="description">
+        Preencha os dados para simular o cadastro de cliente na Umami Foods.
+      </p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      @for (campo of campos; track campo.controlName) {
+        <div class="input-group">
+          <label [for]="campo.controlName">{{ campo.label }}</label>
+
+          <input
+            [id]="campo.controlName"
+            [type]="campo.type"
+            [formControlName]="campo.controlName"
+            [placeholder]="campo.placeholder || ''"
+            (input)="onInputCampo(campo.controlName)"
+          />
+        </div>
+      }
+
+      @if (senhasDiferentes) {
+        <p class="erro-senha">
+          As senhas não coincidem.
+        </p>
+      }
+
+      <div class="password-rules">
+        <h3>Requisitos da senha</h3>
+
+        <div class="rules-list">
+          @for (regra of regrasSenha; track regra.texto) {
+            <div
+              class="rule-item"
+              [class.ok]="regra.ativa()"
+            >
+              <span class="rule-icon">
+                {{ regra.ativa() ? '✓' : '•' }}
+              </span>
+              <span>{{ regra.texto }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+      <button
+        class="submit-btn"
+        [ngClass]="{
+          success: statusCadastro() === 'sucesso',
+          error: statusCadastro() === 'erro'
+        }"
+        type="submit"
+      >
+        @if (statusCadastro() === 'sucesso') {
+          Cadastro realizado
+        } @else if (statusCadastro() === 'erro') {
+          Verifique os dados
+        } @else {
+          Cadastrar
+        }
+      </button>
+    </form>
+
+    <p class="switch-text">
+      Já possui conta?
+      <button type="button" class="text-btn" (click)="irParaLogin()">
+        Entrar
+      </button>
+    </p>
+  </section>
+</main>

@@ -1,0 +1,62 @@
+<header class="header-shell">
+  <div class="navbar">
+    <a routerLink="/home" class="brand">
+      <img
+        src="logo-dark.png"
+        alt="Umami Foods"
+        class="brand-logo"
+      />
+    </a>
+
+    <nav class="nav-links">
+      @for (item of navItems; track item.label) {
+        <a
+          [routerLink]="item.route"
+          [class.active]="item.label === currentPage"
+        >
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+
+    <div class="header-actions">
+      <button
+        type="button"
+        class="cart-button"
+        (click)="cartService.abrirCarrinho()"
+      >
+        <span class="cart-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M7 18C5.9 18 5.01 18.9 5.01 20S5.9 22 7 22 9 21.1 9 20 8.1 18 7 18ZM17 18C15.9 18 15.01 18.9 15.01 20S15.9 22 17 22 19 21.1 19 20 18.1 18 17 18ZM7.17 14H17.12C17.87 14 18.53 13.59 18.87 12.97L22 7.5V6H6.21L5.27 4H2V6H4L7.6 13.59 6.25 16.04C5.52 17.37 6.48 19 8 19H20V17H8L7.17 14Z"
+            />
+          </svg>
+        </span>
+
+        <span class="cart-text">
+          Carrinho
+        </span>
+
+        @if (cartService.quantidadeItens > 0) {
+          <span class="cart-count">
+            {{ cartService.quantidadeItens }}
+          </span>
+        }
+      </button>
+
+      @if (authService.isAutenticado()) {
+        <button
+          type="button"
+          class="nav-logout"
+          (click)="logout()"
+        >
+          Sair
+        </button>
+      } @else {
+        <a routerLink="/login" class="nav-login">
+          Login
+        </a>
+      }
+    </div>
+  </div>
+</header>

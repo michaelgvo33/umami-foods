@@ -1,0 +1,75 @@
+<main class="home-page">
+  <app-header
+    [navItems]="navItems"
+    currentPage="Home"
+  />
+
+  <section class="hero-section">
+    <div class="hero-banner">
+      <span class="hero-tag">{{ hero.tag }}</span>
+
+      <h1>{{ hero.title }}</h1>
+
+      <p class="hero-text">
+        {{ hero.description }}
+      </p>
+
+      <div class="hero-actions">
+        @for (action of heroActions; track action.label) {
+          <a
+            [routerLink]="action.route"
+            class="hero-action"
+            [class.primary-btn]="action.variant === 'primary'"
+            [class.secondary-btn]="action.variant === 'secondary'"
+          >
+            {{ action.label }}
+          </a>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="offers-section">
+    <div class="section-header">
+      <h2>Produtos em oferta</h2>
+      <p>Alguns itens do catálogo com preço promocional.</p>
+    </div>
+
+    <div class="offers-grid">
+      @for (produto of ofertas; track produto.id) {
+        <app-product-card
+          [produto]="produto"
+          [precoAntigo]="produto.precoAntigo"
+          buttonLabel="Adicionar ao carrinho"
+          (addToCart)="adicionarAoCarrinho($event)"
+        />
+      }
+    </div>
+  </section>
+
+  <section class="benefits-section">
+    <div class="section-header">
+      <h2>Sobre o atendimento</h2>
+      <p>
+        A ideia do site é facilitar a consulta dos produtos e simular um pedido
+        para uma distribuidora de produtos orientais.
+      </p>
+    </div>
+
+    <div class="benefits-grid">
+      @for (item of beneficios; track item.title) {
+        <article class="benefit-card">
+          <h3>{{ item.title }}</h3>
+          <p>{{ item.description }}</p>
+        </article>
+      }
+    </div>
+  </section>
+
+  <app-cart-sidebar />
+
+  <app-footer
+    [links]="footerLinks"
+    copyright="© 2026 Umami Foods. Projeto acadêmico desenvolvido em Angular."
+  />
+</main>

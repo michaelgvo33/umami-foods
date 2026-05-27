@@ -1,0 +1,129 @@
+<main class="contato-page">
+  <app-header
+    [navItems]="navItems"
+    currentPage="Contato"
+  />
+
+  <section class="hero-section">
+    <div class="hero-card">
+      <span class="hero-tag">{{ hero.tag }}</span>
+      <h1>{{ hero.title }}</h1>
+      <p>{{ hero.description }}</p>
+    </div>
+  </section>
+
+  <section class="content-shell">
+    <div class="contact-grid">
+      <section class="contact-card">
+        <div class="section-header">
+          <h2>Canais de contato</h2>
+          <p>Algumas opções para o cliente falar com a distribuidora.</p>
+        </div>
+
+        <div class="channels-grid">
+          @for (canal of canais; track canal.titulo) {
+            <article class="channel-card">
+              <h3>{{ canal.titulo }}</h3>
+              <strong>{{ canal.destaque }}</strong>
+              <p>{{ canal.descricao }}</p>
+            </article>
+          }
+        </div>
+      </section>
+
+      <section class="contact-card">
+        <div class="section-header">
+          <h2>Formulário de contato</h2>
+          <p>Preencha os campos abaixo para simular o envio de uma mensagem.</p>
+        </div>
+
+        <form
+          [formGroup]="form"
+          (ngSubmit)="enviarFormulario()"
+          class="contact-form"
+        >
+          @for (campo of camposFormulario; track campo.controlName) {
+            <div class="input-group">
+              <label [for]="campo.controlName">{{ campo.label }}</label>
+
+              @if (
+                campo.type === 'text' ||
+                campo.type === 'email' ||
+                campo.type === 'tel'
+              ) {
+                <input
+                  [id]="campo.controlName"
+                  [type]="campo.type"
+                  [formControlName]="campo.controlName"
+                  [placeholder]="campo.placeholder || ''"
+                />
+              }
+
+              @if (campo.type === 'select') {
+                <select
+                  [id]="campo.controlName"
+                  [formControlName]="campo.controlName"
+                >
+                  <option value="">Selecione um assunto</option>
+
+                  @for (assunto of assuntos; track assunto) {
+                    <option [value]="assunto">
+                      {{ assunto }}
+                    </option>
+                  }
+                </select>
+              }
+
+              @if (campo.type === 'textarea') {
+                <textarea
+                  [id]="campo.controlName"
+                  [formControlName]="campo.controlName"
+                  [rows]="campo.rows || 4"
+                  [placeholder]="campo.placeholder || ''"
+                ></textarea>
+              }
+            </div>
+          }
+
+          <button
+            class="submit-btn"
+            [ngClass]="{
+              success: statusEnvio() === 'sucesso',
+              error: statusEnvio() === 'erro'
+            }"
+            type="submit"
+          >
+            @if (statusEnvio() === 'sucesso') {
+              Mensagem enviada
+            } @else if (statusEnvio() === 'erro') {
+              Verifique os campos
+            } @else {
+              Enviar mensagem
+            }
+          </button>
+        </form>
+      </section>
+    </div>
+
+    <section class="faq-card">
+      <div class="section-header">
+        <h2>Perguntas frequentes</h2>
+        <p>Algumas respostas simples sobre o funcionamento do projeto.</p>
+      </div>
+
+      <div class="faq-list">
+        @for (item of faq; track item.pergunta) {
+          <article class="faq-item">
+            <h3>{{ item.pergunta }}</h3>
+            <p>{{ item.resposta }}</p>
+          </article>
+        }
+      </div>
+    </section>
+  </section>
+
+  <app-footer
+    [links]="footerLinks"
+    copyright="© 2026 Umami Foods. Projeto acadêmico desenvolvido em Angular."
+  />
+</main>

@@ -1,0 +1,56 @@
+<article class="product-card">
+
+  @if (possuiDestaque) {
+    <span class="product-badge">
+      {{ produto.destaque }}
+    </span>
+  }
+
+  <button
+    type="button"
+    class="product-image-box"
+  >
+    <img
+      [src]="produto.imagem"
+      [alt]="produto.nome"
+      class="product-image"
+    />
+  </button>
+
+  <div class="product-content">
+
+    <p class="product-category">
+      {{ produto.categoria }}
+    </p>
+
+    <h3>
+      {{ produto.nome }}
+    </h3>
+
+    <p class="product-description">
+      {{ produto.descricao }}
+    </p>
+
+    @if (possuiPrecoAntigo) {
+      <p class="old-price">
+        {{ precoAntigoFormatado }}
+      </p>
+    }
+
+    <p class="new-price">
+      {{ precoFormatado }}
+    </p>
+
+  </div>
+
+  <div class="product-actions">
+    <button
+      type="button"
+      class="primary-btn full-width-btn"
+      (click)="adicionarAoCarrinho()"
+    >
+      {{ buttonLabel }}
+    </button>
+  </div>
+
+</article>
