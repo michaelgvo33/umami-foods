@@ -1,0 +1,46 @@
+<article class="product-card">
+
+  <button
+    type="button"
+    class="product-image-box"
+  >
+    <!-- CORREÇÃO 404: Removido o '/' para ler direto o caminho limpo 'imagens/imagem_XX.jpg' do seu TypeScript -->
+    <img
+      [src]="produto.imagem"
+      [alt]="produto.nome"
+      class="product-image"
+    />
+  </button>
+
+  <div class="product-content">
+
+    <p class="product-category">
+      {{ produto.categoria }}
+    </p>
+
+    <h3>
+      {{ produto.nome }}
+    </h3>
+
+    <p class="product-description">
+      {{ produto.descricao }}
+    </p>
+
+  </div>
+
+  <div class="product-actions">
+    <!-- CORREÇÃO DE PREÇO: Adicionada a exibição do valor antes do botão, padrão do seu e-commerce -->
+    <span class="product-price" style="display: block; font-weight: bold; font-size: 16px; margin-bottom: 12px; color: #222222;">
+      {{ precoFormatado }}
+    </span>
+
+    <button
+      type="button"
+      class="primary-btn full-width-btn"
+      (click)="adicionarAoCarrinho()"
+    >
+      {{ buttonLabel }}
+    </button>
+  </div>
+
+</article>

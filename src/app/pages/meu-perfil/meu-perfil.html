@@ -1,0 +1,63 @@
+<!-- CORREÇÃO: Tag limpa sem o parâmetro [navItems] que causava o travamento -->
+<app-header currentPage="Meu Perfil"></app-header>
+
+<main class="perfil-container">
+  
+  @if (authService.usuarioLogado()) {
+    <header class="perfil-header">
+      <span class="tag">Minha Conta</span>
+      <h1>Dados Cadastrais</h1>
+      <p class="description">Confira as informações da sua conta salvas no sistema Umami Foods.</p>
+    </header>
+
+    <section class="perfil-card">
+      <div class="info-grid">
+        
+        <div class="form-group">
+          <label>Nome Completo</label>
+          <input type="text" [value]="usuario.nome" disabled />
+        </div>
+
+        <div class="form-group">
+          <label>E-mail de Acesso</label>
+          <input type="email" [value]="usuario.email" disabled />
+        </div>
+
+        <div class="form-group">
+          <label>CPF</label>
+          <input type="text" [value]="usuario.cpf" disabled />
+        </div>
+
+        <div class="form-group">
+          <label>Telefone / WhatsApp</label>
+          <input type="text" [value]="usuario.telefone" disabled />
+        </div>
+
+        <div class="form-group">
+          <label>Membro Desde</label>
+          <input type="text" [value]="usuario.dataCadastro" disabled />
+        </div>
+
+      </div>
+
+      <div class="aviso-leitura">
+        <p>⚠️ Para alterar qualquer dado cadastral, entre em contato com o suporte do administrador.</p>
+      </div>
+    </section>
+  } 
+  
+  @else {
+    <section class="aviso-cadastro-container">
+      <h2>Você precisa ter um cadastro para acessar esta página.</h2>
+      <p>Crie uma conta rapidamente para visualizar seus dados e gerenciar seus pedidos.</p>
+      
+      <div class="cadastro-actions">
+        <a routerLink="/cadastro" class="btn-cadastro-primary">Criar minha conta</a>
+        <a routerLink="/login" class="btn-cadastro-secondary">Já tenho conta (Login)</a>
+      </div>
+    </section>
+  }
+
+</main>
+
+<app-footer [links]="footerLinks"></app-footer>

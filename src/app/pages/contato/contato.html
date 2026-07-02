@@ -1,0 +1,124 @@
+<app-header currentPage="Contato"></app-header>
+
+<main class="contato-page">
+  
+  <!-- Seção Hero original do seu CSS -->
+  <section class="hero-section">
+    <div class="hero-card">
+      <span class="hero-tag">{{ hero.tag }}</span>
+      <h1>{{ hero.title }}</h1>
+      <p>{{ hero.description }}</p>
+    </div>
+  </section>
+
+  <!-- Shell de Conteúdo Principal -->
+  <div class="content-shell">
+    
+    <!-- Grid Duplo: Formulário + Canais de Atendimento -->
+    <div class="contact-grid">
+      
+      <!-- Lado Esquerdo: Formulário de Mensagem -->
+      <section class="contact-card">
+        <div class="section-header">
+          <h2>Envie uma mensagem</h2>
+          <p>Preencha os campos para simular seu atendimento.</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="enviarFormulario()" class="contact-form">
+          @for (campo of camposFormulario; track campo.controlName) {
+            <div class="input-group">
+              <label [for]="campo.controlName">{{ campo.label }}</label>
+
+              <!-- Condição para Campo do Tipo Select (Assuntos) -->
+              @if (campo.type === 'select') {
+                <select [id]="campo.controlName" [formControlName]="campo.controlName">
+                  <option value="" disabled selected>Selecione um assunto</option>
+                  @for (assunto of assuntos; track assunto) {
+                    <option [value]="assunto">{{ assunto }}</option>
+                  }
+                </select>
+              }
+              
+              <!-- Condição para Campo do Tipo Textarea (Mensagem) -->
+              @else if (campo.type === 'textarea') {
+                <textarea 
+                  [id]="campo.controlName" 
+                  [formControlName]="campo.controlName" 
+                  [placeholder]="campo.placeholder || ''"
+                  [rows]="campo.rows || 4"
+                ></textarea>
+              }
+              
+              <!-- Condição para Inputs Comuns (Texto, E-mail, Telefone) -->
+              @else {
+                <input 
+                  [id]="campo.controlName" 
+                  [type]="campo.type" 
+                  [formControlName]="campo.controlName" 
+                  [placeholder]="campo.placeholder || ''"
+                />
+              }
+            </div>
+          }
+
+          <!-- Botão Dinâmico com leitura de Status e Cores Reativas do CSS -->
+          <button 
+            type="submit" 
+            class="submit-btn"
+            [class.success]="statusEnvio() === 'sucesso'"
+            [class.error]="statusEnvio() === 'erro'"
+          >
+            @if (statusEnvio() === 'sucesso') {
+              Mensagem enviada com sucesso!
+            } @else if (statusEnvio() === 'erro') {
+              Por favor, preencha todos os campos.
+            } @else {
+              Enviar Mensagem
+            }
+          </button>
+        </form>
+      </section>
+
+      <!-- Lado Direito: Canais de Atendimento Estilizados -->
+      <section class="contact-card">
+        <div class="section-header">
+          <h2>Canais diretos</h2>
+          <p>Fale conosco através de nossos contatos oficiais comerciais.</p>
+        </div>
+
+        <div class="channels-grid">
+          @for (canal of canais; track canal.titulo) {
+            <article class="channel-card">
+              <h3>{{ canal.titulo }}</h3>
+              <strong>{{ canal.destaque }}</strong>
+              <p>{{ canal.descricao }}</p>
+            </article>
+          }
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Seção de Perguntas Frequentes (FAQ) abaixo do grid -->
+    <section class="faq-card">
+      <div class="section-header">
+        <h2>Perguntas frequentes (FAQ)</h2>
+        <p>Esclareça suas principais dúvidas sobre o funcionamento da nossa distribuidora.</p>
+      </div>
+
+      <div class="faq-list">
+        @for (item of faq; track item.pergunta) {
+          <article class="faq-item">
+            <h3>{{ item.pergunta }}</h3>
+            <p>{{ item.resposta }}</p>
+          </article>
+        }
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<app-cart-sidebar></app-cart-sidebar>
+
+<app-footer [links]="footerLinks" copyright="© 2026 Umami Foods. Projeto acadêmico desenvolvido em Angular."></app-footer>

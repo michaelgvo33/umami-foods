@@ -1,0 +1,10 @@
+{
+  "/api-senac": {
+    "target": "http://10.136.38.50:4008",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api-senac": ""
+    }
+  }
+}

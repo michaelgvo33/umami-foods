@@ -1,0 +1,103 @@
+<app-header currentPage="Produtos"></app-header>
+
+<main class="produtos-page">
+  
+  <!-- Estrutura original do seu Breadcrumb -->
+  <div class="breadcrumb-shell">
+    <nav class="breadcrumb">
+      @for (item of breadcrumbItems; track item.label; let last = $last) {
+        <button 
+          type="button" 
+          class="breadcrumb-item" 
+          [class.current]="last" 
+          (click)="onBreadcrumbClick(item)"
+        >
+          {{ item.label }}
+        </button>
+        @if (!last) { <span>&gt;</span> }
+      }
+    </nav>
+  </div>
+
+  <!-- Estrutura original do seu Banner Hero -->
+  <section class="hero-section">
+    <div class="hero-card">
+      <span class="hero-tag">{{ hero.tag }}</span>
+      <h1>{{ hero.title }}</h1>
+      <p>{{ hero.description }}</p>
+    </div>
+  </section>
+
+  <!-- Estrutura original do seu Catálogo de Vitrine -->
+  <section class="catalog-shell">
+    
+    <!-- Seus chips originais de filtro por Categoria -->
+    <div class="categories-row">
+      @for (cat of categorias; track cat) {
+        <button 
+          type="button" 
+          class="category-chip" 
+          [class.active]="categoriaSelecionada === cat"
+          (click)="selecionarCategoria(cat)"
+        >
+          {{ cat }}
+        </button>
+      }
+    </div>
+
+    <!-- RENDERIZAÇÃO DA VITRINE OU DO DETALHE DO PRODUTO -->
+    @if (!produtoSelecionado) {
+      
+      <div class="section-header">
+        <h2>Catálogo de Produtos</h2>
+        <p>Navegue pelas categorias e monte sua lista de pedidos.</p>
+      </div>
+
+      <!-- CORREÇÃO: Escutando exatamente o evento (addToCart) configurado no TypeScript do card -->
+      <div class="products-grid">
+        @for (prod of produtosFiltrados; track prod.id) {
+          <app-product-card 
+            [produto]="prod" 
+            (addToCart)="adicionarAoCarrinho(prod)">
+          </app-product-card>
+        }
+      </div>
+
+    } @else {
+      
+      <!-- Estrutura original do seu card expandido de Detalhes -->
+      <article class="detail-card">
+        <div class="detail-image-box">
+          <img [src]="produtoSelecionado.imagem" [alt]="produtoSelecionado.nome" class="detail-image" />
+        </div>
+        
+        <div class="detail-content">
+          <div>
+            <span class="detail-category">{{ produtoSelecionado.categoria }}</span>
+            <h2>{{ produtoSelecionado.nome }}</h2>
+            <p class="detail-description">{{ produtoSelecionado.descricao }}</p>
+          </div>
+          
+          <div>
+            <span class="detail-price">
+              <strong>{{ formatarPreco(produtoSelecionado.preco) }}</strong>
+            </span>
+            <div class="detail-actions">
+              <button type="button" class="primary-btn" (click)="adicionarAoCarrinho(produtoSelecionado)">
+                Adicionar ao Carrinho
+              </button>
+              <button type="button" class="ghost-btn" (click)="voltarParaCatalogo()">
+                Voltar ao catálogo
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    }
+  </section>
+</main>
+
+<app-cart-sidebar></app-cart-sidebar>
+
+<app-footer [links]="footerLinks" copyright="© 2026 Umami Foods. Projeto acadêmico desenvolvido em Angular."></app-footer>

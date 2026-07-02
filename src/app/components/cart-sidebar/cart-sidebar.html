@@ -1,0 +1,93 @@
+<!-- Container principal controlado pelo estado reativo do serviço global -->
+<div class="cart-sidebar-backdrop" [class.active]="cartService.carrinhoAberto()" (click)="cartService.fecharCarrinho()"></div>
+
+<aside class="cart-sidebar" [class.open]="cartService.carrinhoAberto()">
+  <header class="cart-sidebar-header">
+    <h2>Seu Pedido</h2>
+    <button type="button" class="close-btn" (click)="cartService.fecharCarrinho()">
+      &times;
+    </button>
+  </header>
+
+  <!-- LISTA DE PRODUTOS DO CARRINHO -->
+  <div class="cart-sidebar-content">
+
+    <!-- CORREÇÃO: Alerta de sucesso integrado substituindo o alert do navegador -->
+    @if (cartService.statusPedido() === 'sucesso') {
+      <div class="alerta-sucesso-box" style="margin: 10px 14px; padding: 12px; background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; border-radius: 6px; text-align: center; font-weight: bold; font-size: 14px;">
+        Pedido concluído com sucesso! Obrigado pela preferência.
+      </div>
+    }
+
+    <!-- CORREÇÃO: Alerta de erro caso tente finalizar o pedido sem estar logado -->
+    @if (cartService.statusPedido() === 'erro') {
+      <div class="alerta-erro-box" style="margin: 10px 14px; padding: 12px; background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; border-radius: 6px; text-align: center; font-weight: bold; font-size: 14px;">
+        Por favor, faça o login no sistema para poder finalizar o seu pedido.
+      </div>
+    }
+
+    @if (cartService.carrinho().length > 0) {
+      <div class="cart-items-list">
+        @for (item of cartService.carrinho(); track item.id) {
+          <article class="cart-item-card">
+            <img [src]="item.imagem" [alt]="item.nome" class="cart-item-img" />
+            
+            <div class="cart-item-details">
+              <h3>{{ item.nome }}</h3>
+              <p class="cart-item-price">{{ cartService.formatarPreco(item.preco) }}</p>
+              
+              <!-- Controles de Quantidade Simples -->
+              <div class="cart-item-actions">
+                <div class="quantity-controls">
+                  <button type="button" (click)="cartService.diminuirQuantidade(item.id)">-</button>
+                  <span class="quantity-value">{{ item.quantidade }}</span>
+                  <button type="button" (click)="cartService.aumentarQuantidade(item.id)">+</button>
+                </div>
+                
+                <button type="button" class="remove-btn" (click)="cartService.removerItem(item.id)">
+                  Remover
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <!-- Estado do Carrinho Vazio -->
+      <div class="cart-empty-state">
+        <p>Seu carrinho está vazio.</p>
+        <p class="sub-text">Adicione produtos do catálogo para iniciar seu pedido.</p>
+      </div>
+    }
+  </div>
+
+  <!-- RESUMO DE VALORES E FECHAMENTO DO PEDIDO -->
+  @if (cartService.carrinho().length > 0) {
+    <footer class="cart-sidebar-footer">
+      <div class="summary-line">
+        <span>Subtotal:</span>
+        <span>{{ cartService.formatarPreco(cartService.totalCarrinho) }}</span>
+      </div>
+      
+      <!-- EXIBIÇÃO DA TAXA DE ENTREGA (TABELA FRETE) -->
+      <div class="summary-line">
+        <span>Frete Fixo:</span>
+        <span>{{ cartService.formatarPreco(cartService.frete) }}</span>
+      </div>
+      
+      <div class="summary-line total-line">
+        <span>Total Geral:</span>
+        <span>{{ cartService.formatarPreco(cartService.totalComFrete) }}</span>
+      </div>
+
+      <!-- BOTÃO QUE INTERAGE COM AS TABELAS: pedido, item_pedido, pagamento, endereco_cliente -->
+      <button 
+        type="button" 
+        class="checkout-btn" 
+        (click)="cartService.finalizarPedido()"
+      >
+        Finalizar Pedido
+      </button>
+    </footer>
+  }
+</aside>

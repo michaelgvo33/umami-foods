@@ -1,0 +1,11 @@
+<footer class="footer-text">
+  <div class="footer-links">
+    @for (item of links; track item.label) {
+      <a [routerLink]="item.route">
+        {{ item.label }}
+      </a>
+    }
+  </div>
+
+  <p>{{ copyright }}</p>
+</footer>

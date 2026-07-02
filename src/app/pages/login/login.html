@@ -1,0 +1,84 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <span class="auth-tag">Acesso</span>
+
+    <div class="card-header">
+      <h1>Entrar na conta</h1>
+      <p class="description">
+        Informe seus dados para realizar o acesso ao sistema da Umami Foods.
+      </p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="entrar()" class="auth-form">
+      @for (campo of campos; track campo.controlName) {
+        <div class="input-group">
+          <label [for]="campo.controlName">{{ campo.label }}</label>
+
+          <input
+            [id]="campo.controlName"
+            [type]="campo.type"
+            [formControlName]="campo.controlName"
+            [placeholder]="campo.placeholder || ''"
+            [class.input-erro]="loginForm.get(campo.controlName)?.invalid && loginForm.get(campo.controlName)?.touched"
+          />
+
+          <!-- Exibição de erro básica caso o campo falte preencher ou seja e-mail inválido -->
+          @if (loginForm.get(campo.controlName)?.invalid && loginForm.get(campo.controlName)?.touched) {
+            <div class="validation-error">
+              @if (loginForm.get(campo.controlName)?.errors?.['required']) {
+                <small>Este campo é obrigatório.</small>
+              }
+              @if (loginForm.get(campo.controlName)?.errors?.['email']) {
+                <small>Por favor, insira um e-mail válido.</small>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- CORREÇÃO: Alertas visuais na tela substituindo o alert() do navegador -->
+      @if (statusLogin === 'erro') {
+        <div class="alerta-erro-box">
+          E-mail ou senha incorretos. Por favor, tente novamente.
+        </div>
+      }
+
+      @if (statusLogin === 'erro-servidor') {
+        <div class="alerta-erro-box">
+          Não foi possível conectar ao servidor. Tente novamente mais tarde.
+        </div>
+      }
+
+      @if (statusLogin === 'sucesso') {
+        <div class="alerta-sucesso-box">
+          Autenticado com sucesso! Entrando no sistema...
+        </div>
+      }
+
+      <!-- Botão simples lendo a variável de string tradicional do TypeScript -->
+      <button
+        class="submit-btn"
+        [ngClass]="{
+          'success': statusLogin === 'sucesso',
+          'error': statusLogin === 'erro'
+        }"
+        type="submit"
+      >
+        @if (statusLogin === 'sucesso') {
+          Login realizado
+        } @else if (statusLogin === 'erro') {
+          Login inválido
+        } @else {
+          Entrar
+        }
+      </button>
+    </form>
+
+    <p class="switch-text">
+      Não possui conta?
+      <button type="button" class="text-btn" (click)="irParaCadastro()">
+        Cadastre-se
+      </button>
+    </p>
+  </section>
+</main>

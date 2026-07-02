@@ -1,0 +1,89 @@
+<main class="auth-page">
+  <section class="auth-card">
+    <span class="auth-tag">Cadastro</span>
+
+    <div class="card-header">
+      <h1>Criar conta</h1>
+      <p class="description">
+        Preencha os dados para realizar o cadastro de cliente na Umami Foods.
+      </p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="auth-form">
+      @for (campo of campos; track campo.controlName) {
+        <div class="input-group">
+          <label [for]="campo.controlName">{{ campo.label }}</label>
+
+          <!-- Código simplificado: Removida a escuta onInputCampo desnecessária -->
+          <input
+            [id]="campo.controlName"
+            [type]="campo.type"
+            [formControlName]="campo.controlName"
+            [placeholder]="campo.placeholder || ''"
+            [class.input-erro]="form.get(campo.controlName)?.invalid && form.get(campo.controlName)?.touched"
+          />
+
+          <!-- Exibição de erro básica caso o campo seja obrigatório ou e-mail inválido -->
+          @if (form.get(campo.controlName)?.invalid && form.get(campo.controlName)?.touched) {
+            <div class="validation-error">
+              @if (form.get(campo.controlName)?.errors?.['required']) {
+                <small>Este campo é obrigatório.</small>
+              }
+              @if (form.get(campo.controlName)?.errors?.['email']) {
+                <small>Por favor, insira um e-mail válido.</small>
+              }
+              @if (form.get(campo.controlName)?.errors?.['minlength']) {
+                <small>Quantidade de caracteres abaixo do mínimo exigido.</small>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Alerta direto caso as senhas digitadas não batam -->
+      @if (senhasDiferentes) {
+        <p class="erro-senha" style="color: #d9381e; font-size: 0.85rem; margin: -5px 0 15px 0; font-weight: bold;">
+          ⚠️ As senhas não coincidem.
+        </p>
+      }
+
+      <!-- CORREÇÃO: Alertas visuais na tela substituindo o alert() do navegador -->
+      @if (statusCadastro === 'erro') {
+        <div class="alerta-erro-box">
+          Não foi possível concluir o cadastro. Verifique as validações ou se o e-mail/CPF já possui conta.
+        </div>
+      }
+
+      @if (statusCadastro === 'sucesso') {
+        <div class="alerta-sucesso-box">
+          Cadastro realizado com sucesso! Redirecionando para o login...
+        </div>
+      }
+
+      <!-- Botão simples lendo a variável de texto tradicional do TypeScript -->
+      <button
+        class="submit-btn"
+        [ngClass]="{
+          'success': statusCadastro === 'sucesso',
+          'error': statusCadastro === 'erro'
+        }"
+        type="submit"
+      >
+        @if (statusCadastro === 'sucesso') {
+          Cadastro realizado
+        } @else if (statusCadastro === 'erro') {
+          Verifique os dados
+        } @else {
+          Cadastrar
+        }
+      </button>
+    </form>
+
+    <p class="switch-text">
+      Já possui conta?
+      <button type="button" class="text-btn" (click)="irParaLogin()">
+        Entrar
+      </button>
+    </p>
+  </section>
+</main>
