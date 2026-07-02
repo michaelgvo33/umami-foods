@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { Produto } from '../models/produto'; // Importação do modelo correto do projeto
 import { AuthService } from './auth.service';
-import { API_BASE_URL } from '../api-config';
+import { API_PEDIDOS} from '../api-config';
 
 // Interface que estende o modelo de Produto adicionando o controle de quantidade
 export interface CartItem extends Produto {
@@ -20,7 +20,7 @@ export class CartService {
   private readonly authService = inject(AuthService);
 
  
-  private readonly apiPedidosUrl = `${API_BASE_URL}/pedidos`;
+  private readonly apiPedidosUrl = API_PEDIDOS;
 
   // Carrega o carrinho
   readonly carrinho = signal<CartItem[]>(this.carregarCarrinho());

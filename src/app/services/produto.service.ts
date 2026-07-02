@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { API_BASE_URL } from '../api-config';
+import { API_PRODUTOS } from '../api-config';
 
 // Define que esta classe é um serviço global (Injeção de Dependência)
 @Injectable({
@@ -12,7 +12,7 @@ export class ProdutoService {
   private readonly http = inject(HttpClient);
   
   // Link direto da API do Senac que se conecta ao Banco de Dados MySQL
-  private readonly apiUrl = `${API_BASE_URL}/produtos`;
+  private readonly apiUrl = API_PRODUTOS;
 
   // 1. BUSCAR TODOS OS PRODUTOS
   // Faz um comando GET na API para listar todos os pratos de comida japonesa do banco

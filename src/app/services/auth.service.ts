@@ -2,14 +2,14 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, map, catchError, of } from 'rxjs';
 import { Usuario } from '../models/usuario';
-import { API_BASE_URL } from '../api-config';
+import { API_CLIENTES } from '../api-config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = `${API_BASE_URL}/clientes`; 
+  private readonly apiUrl = API_CLIENTES; 
 
   // Sinal que guarda o usuário que está logado no sistema
   readonly usuarioLogado = signal<Usuario | null>(null);

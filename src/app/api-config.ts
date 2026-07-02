@@ -1,3 +1,4 @@
-// URL base da API do projeto (Senac). Fica tudo aqui pra não ter que
-// caçar e trocar em 3 arquivos diferentes se o endereço mudar.
-export const API_BASE_URL = 'http://academico3.rj.senac.br/20261prjint3manha-comida-japonesa/api/produtos/'; // URL base da API do projeto (Senac). Fica tudo aqui pra não ter que
+
+export const API_PRODUTOS = 'http://academico3.rj.senac.br/20261prjint3manha-comida-japonesa/api/produtos';
+export const API_CLIENTES = 'http://academico3.rj.senac.br/20261prjint3manha-comida-japonesa/api/clientes';
+export const API_PEDIDOS  = 'http://academico3.rj.senac.br/20261prjint3manha-comida-japonesa/api/pedidos';
