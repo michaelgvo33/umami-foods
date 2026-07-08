@@ -3,6 +3,7 @@
   <button
     type="button"
     class="product-image-box"
+    (click)="verDetalhes()"
   >
     <!-- CORREÇÃO 404: Removido o '/' para ler direto o caminho limpo 'imagens/imagem_XX.jpg' do seu TypeScript -->
     <img
@@ -18,7 +19,7 @@
       {{ produto.categoria }}
     </p>
 
-    <h3>
+    <h3 class="product-title-link" (click)="verDetalhes()">
       {{ produto.nome }}
     </h3>
 

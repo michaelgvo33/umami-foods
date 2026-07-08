@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 import { CartSidebarComponent } from '../../components/cart-sidebar/cart-sidebar';
 import { FooterComponent } from '../../components/footer/footer';
@@ -29,6 +29,7 @@ import { NavItem } from '../../interfaces/nav-item';
 })
 export class Home {
   public readonly cartService = inject(CartService);
+  private readonly router = inject(Router);
 
   readonly navItems: NavItem[] = [
     { label: 'Home', route: '/home' },
@@ -99,5 +100,10 @@ export class Home {
 
   adicionarAoCarrinho(produto: Produto): void {
     this.cartService.adicionarAoCarrinho(produto);
+  }
+
+  // Leva pra tela de Produtos já abrindo o detalhe do item clicado
+  verDetalhesProduto(produto: Produto): void {
+    this.router.navigate(['/produtos'], { queryParams: { produto: produto.id } });
   }
 }

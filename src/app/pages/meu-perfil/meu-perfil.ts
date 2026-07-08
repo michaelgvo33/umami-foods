@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header';
 import { FooterComponent } from '../../components/footer/footer';
 import { NavItem } from '../../interfaces/nav-item';
@@ -16,7 +17,7 @@ interface UsuarioPerfil {
 @Component({
   selector: 'app-meu-perfil',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, HeaderComponent, FooterComponent],
   templateUrl: './meu-perfil.html',
   styleUrl: './meu-perfil.css'
 })

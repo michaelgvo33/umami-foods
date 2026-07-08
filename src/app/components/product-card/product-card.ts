@@ -23,6 +23,14 @@ export class ProductCardComponent {
   @Output()
   addToCart = new EventEmitter<Produto>();
 
+  @Output()
+  selectProduct = new EventEmitter<Produto>();
+
+  // Dispara quando clica na imagem/nome do card, pra abrir a página de detalhe do produto
+  verDetalhes(): void {
+    this.selectProduct.emit(this.produto);
+  }
+
   // Consome a formatação centralizada do seu serviço de carrinho
   get precoFormatado(): string {
     return this.cartService.formatarPreco(this.produto.preco);

@@ -55,6 +55,14 @@
   margin-bottom: 10px;
 }
 
+.product-title-link {
+  cursor: pointer;
+}
+
+.product-title-link:hover {
+  color: #c62828;
+}
+
 .product-description {
   color: #666666;
   font-size: 14px;

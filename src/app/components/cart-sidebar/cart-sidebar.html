@@ -26,6 +26,13 @@
       </div>
     }
 
+    <!-- Alerta pra quando o sistema não consegue identificar o id da conta logada -->
+    @if (cartService.statusPedido() === 'erro-conta') {
+      <div class="alerta-erro-box" style="margin: 10px 14px; padding: 12px; background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; border-radius: 6px; text-align: center; font-weight: bold; font-size: 14px;">
+        Não conseguimos identificar sua conta. Saia e faça login novamente antes de finalizar o pedido.
+      </div>
+    }
+
     @if (cartService.carrinho().length > 0) {
       <div class="cart-items-list">
         @for (item of cartService.carrinho(); track item.id) {
@@ -78,6 +85,35 @@
       <div class="summary-line total-line">
         <span>Total Geral:</span>
         <span>{{ cartService.formatarPreco(cartService.totalComFrete) }}</span>
+      </div>
+
+      <!-- ESCOLHA DA FORMA DE PAGAMENTO -->
+      <div class="payment-select">
+        <p class="payment-select-label">Forma de pagamento:</p>
+        <div class="payment-options">
+          <button
+            type="button"
+            class="payment-option-btn"
+            [class.active]="cartService.formaPagamento() === 'pix'"
+            (click)="cartService.selecionarFormaPagamento('pix')"
+          >
+            Pix
+          </button>
+          <button
+            type="button"
+            class="payment-option-btn"
+            [class.active]="cartService.formaPagamento() === 'cartao'"
+            (click)="cartService.selecionarFormaPagamento('cartao')"
+          >
+            Cartão
+          </button>
+        </div>
+
+        @if (cartService.formaPagamento() === 'pix') {
+          <p class="payment-hint">O código Pix é gerado depois de finalizar o pedido.</p>
+        } @else {
+          
+        }
       </div>
 
       <!-- BOTÃO QUE INTERAGE COM AS TABELAS: pedido, item_pedido, pagamento, endereco_cliente -->

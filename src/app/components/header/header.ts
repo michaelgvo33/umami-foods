@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CartService } from '../../services/cart.service';
 import { NavItem } from '../../interfaces/nav-item';
@@ -8,15 +8,13 @@ import { NavItem } from '../../interfaces/nav-item';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, RouterLinkActive],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
 export class HeaderComponent {
   public readonly authService = inject(AuthService);
   public readonly cartService = inject(CartService);
-
-  currentPage: string = '';
 
   readonly navItems: NavItem[] = [
     { label: 'Home', route: '/home' },

@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core'; 
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 // Importação dos componentes visuais reaproveitáveis (Cards, Header, Footer e Lateral do Carrinho)
 import { CartSidebarComponent } from '../../components/cart-sidebar/cart-sidebar';
@@ -31,6 +32,7 @@ export class Produtos implements OnInit {
   // Injeção de dependência dos serviços globais
   public readonly cartService = inject(CartService);
   private readonly produtoService = inject(ProdutoService);
+  private readonly route = inject(ActivatedRoute);
 
   // Configurações estáticas de navegação e textos estruturais do layout (Hero Banner)
   readonly navItems: NavItem[] = [
@@ -72,6 +74,15 @@ export class Produtos implements OnInit {
         if (dados && dados.length > 0) {
           // organiza e mapeia eles
           this.mapearProdutos(dados);
+
+          // se veio um produto específico pela URL (clique lá na Home), já abre o detalhe dele
+          const idNaUrl = this.route.snapshot.queryParamMap.get('produto');
+          if (idNaUrl) {
+            const produtoDaUrl = this.produtos.find((p) => p.id === Number(idNaUrl));
+            if (produtoDaUrl) {
+              this.selecionarProduto(produtoDaUrl);
+            }
+          }
         }
       },
       error: (erro) => {

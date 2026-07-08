@@ -56,13 +56,12 @@ export class Cadastro {
     }
 
     const dadosCliente = { // prepara os dados do cliente para envio ao serviço de autenticação
-      // usando o mesmo nome de campo que o resto do sistema (cliente_*), porque o login
-      // e a página de perfil leem os dados assim
-      cliente_nome: this.form.value.cliente_nome || '',
-      cliente_email: this.form.value.cliente_email || '',
-      cliente_senha: this.form.value.cliente_senha || '',
-      cliente_telefone: this.form.value.cliente_telefone || '',
-      cliente_cpf: this.form.value.cliente_cpf || ''
+      // a API de cadastro espera os campos sem prefixo (confirmado pela resposta de erro do backend)
+      nome: this.form.value.cliente_nome || '',
+      email: this.form.value.cliente_email || '',
+      senha: this.form.value.cliente_senha || '',
+      telefone: this.form.value.cliente_telefone || '',
+      cpf: this.form.value.cliente_cpf || ''
     };
 
     this.authService.cadastrar(dadosCliente).subscribe({

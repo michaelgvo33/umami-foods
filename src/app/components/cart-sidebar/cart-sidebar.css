@@ -185,3 +185,44 @@
 .checkout-btn:hover {
   background: #a82020;
 }
+
+.payment-select {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #eeeeee;
+}
+
+.payment-select-label {
+  font-size: 13px;
+  color: #555555;
+  margin: 0 0 8px 0;
+}
+
+.payment-options {
+  display: flex;
+  gap: 8px;
+}
+
+.payment-option-btn {
+  flex: 1;
+  padding: 8px 0;
+  background: #ffffff;
+  border: 1px solid #dddddd;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #555555;
+  cursor: pointer;
+}
+
+.payment-option-btn.active {
+  background: #c62828;
+  border-color: #c62828;
+  color: #ffffff;
+}
+
+.payment-hint {
+  font-size: 12px;
+  color: #888888;
+  margin: 8px 0 0 0;
+}

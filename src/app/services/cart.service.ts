@@ -27,9 +27,15 @@ export class CartService {
   readonly carrinhoAberto = signal(false);
 
   // Diz se o produto foi enviado para o banco ou não 
-  readonly statusPedido = signal<'normal' | 'sucesso' | 'erro'>('normal');
+  readonly statusPedido = signal<'normal' | 'sucesso' | 'erro' | 'erro-conta'>('normal');
 
-  
+  // Forma de pagamento escolhida no carrinho (pix é o padrão)
+  readonly formaPagamento = signal<'pix' | 'cartao'>('pix');
+
+  selecionarFormaPagamento(forma: 'pix' | 'cartao'): void {
+    this.formaPagamento.set(forma);
+  }
+
   get quantidadeItens(): number {
     let total = 0;
     for (const item of this.carrinho()) {
@@ -112,14 +118,28 @@ export class CartService {
       return;
     }
 
-    const idDoClienteLogado = usuario?.cliente_id || usuario?.id || 1;
+    // pega o id do cliente logado sem "chutar" um valor caso não encontre
+    const idDoClienteLogado = usuario?.cliente_id || usuario?.id;
 
- // armazena os dados do pedido 
+    // sem um id de cliente válido não dá pra saber de quem é o pedido, então barra aqui
+    // (antes isso caía num valor fixo "1", o que podia registrar o pedido na conta errada)
+    if (!idDoClienteLogado) {
+      this.statusPedido.set('erro-conta');
+      return;
+    }
+
+ // armazena os dados do pedido, junto com os itens comprados (tabela item_pedido)
     const payloadBancoDados = {
       pedido_cliente_id: Number(idDoClienteLogado),
       pedido_total: Number(this.totalComFrete),
       pedido_status: 'Processando',
-      pedido_data: new Date().toISOString().substring(0, 10) // para gerar no formato (AAAA-MM-DD)
+      pedido_forma_pagamento: this.formaPagamento(), // 'pix' ou 'cartao'
+      pedido_data: new Date().toISOString().substring(0, 10), // para gerar no formato (AAAA-MM-DD)
+      pedido_itens: this.carrinho().map((item) => ({
+        item_produto_id: item.id,
+        item_quantidade: item.quantidade,
+        item_preco_unitario: item.preco
+      }))
     };
 
    

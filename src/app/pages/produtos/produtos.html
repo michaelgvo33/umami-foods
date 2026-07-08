@@ -58,7 +58,8 @@
         @for (prod of produtosFiltrados; track prod.id) {
           <app-product-card 
             [produto]="prod" 
-            (addToCart)="adicionarAoCarrinho(prod)">
+            (addToCart)="adicionarAoCarrinho(prod)"
+            (selectProduct)="selecionarProduto(prod)">
           </app-product-card>
         }
       </div>
